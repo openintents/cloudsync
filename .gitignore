@@ -8,3 +8,9 @@ libs/
 gen/
 assets/
 
+gwt-unitCache/
+war/
+annotation/
+CloudSync.gwt.xml
+META-INF/
+log4j.pro*
