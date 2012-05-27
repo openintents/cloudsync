@@ -1,4 +1,8 @@
-
+.apt*
+.s*
+.c*
+.f*
+.p*
 bin/
 libs/
 gen/
