@@ -14,19 +14,18 @@
  *******************************************************************************/
 package org.openintents.cloudsync;
 
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
-
-
 import org.openintents.cloudsync.client.MyRequestFactory;
 import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +35,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 /**
  * Main activity - requests "Hello, World" messages from the server and provides
@@ -131,6 +133,71 @@ public class CloudSyncActivity extends Activity {
 
         final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
         final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
+        String tag="vincent";
+        
+        
+        /**
+        Uri customUri = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
+        Log.d(tag, "customeUri:-> "+customUri.toString());
+        
+        ContentValues values = new ContentValues();
+        values.put(IdMapTable.COLUMN_LOCAL_ID,100000+Math.round((Math.random()*30)));
+        values.put(IdMapTable.COLUMN_APPENG_ID,Math.round((Math.random()*30)) );
+        values.put(IdMapTable.PACKAGE_NAME,"com.vettukal.oi");
+        
+        Uri insertUri;
+        insertUri = getContentResolver().insert(customUri, values);
+        Log.d(tag, "inserted uri custom return:-> "+insertUri.toString());
+        
+        Cursor customcurse = getContentResolver().query(customUri, null, null, null, null);
+        if (customcurse.moveToFirst()) { }
+
+        int totRows = customcurse.getCount();
+        Log.d(tag, "totalrow:-> "+totRows );
+        for(int i=0;i<totRows;i++) {
+        	Log.d(tag, customcurse.getString(0));
+        	Log.d(tag, customcurse.getString(1));
+        	Log.d(tag, customcurse.getString(2));
+            customcurse.moveToNext();
+        }
+        
+        /**
+        Uri deleteUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
+        deleteUri = Uri.withAppendedPath(deleteUri, "1");
+        int delRetVal = getContentResolver().delete(deleteUri, null, null);
+        Log.d(tag, "the return value from the deleted op is : "+delRetVal);
+        */
+        
+        /**
+        Uri modUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
+        values = new ContentValues();
+        values.put(ModifyTable.COLUMN_LOCAL_ID, 0156);
+        values.put(ModifyTable.COLUMN_MODIGY_DATE, 0154345);
+        insertUri = getContentResolver().insert(modUri, values);
+        Log.d(tag, "inserted Mod uri is "+insertUri.toString());
+        
+         modUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
+        modUri = Uri.withAppendedPath(modUri, "1");
+        values = new ContentValues();
+        values.put(ModifyTable.COLUMN_LOCAL_ID, 56);
+        values.put(ModifyTable.COLUMN_MODIGY_DATE, 54345);
+        int retVal = getContentResolver().update(modUri, values, null, null);
+        Log.d(tag, "after update on 1 _id the return value is:-> "+retVal);
+        
+        modUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
+        
+        customcurse = getContentResolver().query(modUri, null, null, null, null);
+        if (customcurse.moveToFirst()) { }
+
+        totRows = customcurse.getCount();
+        Log.d(tag, "totalrow in modtable:-> "+totRows );
+        for(int i=0;i<totRows;i++) {
+        	Log.d(tag, customcurse.getString(0));
+        	Log.d(tag, customcurse.getString(1));
+        	Log.d(tag, customcurse.getString(2));
+            customcurse.moveToNext();
+        }
+        */
         sayHelloButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 sayHelloButton.setEnabled(false);

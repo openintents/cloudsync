@@ -19,4 +19,6 @@ public interface CloudSyncRequest extends RequestContext {
 
 	Request<List<TaskProxy>> queryTasks();
 
+	Request<Long> getAppEngineTime();
+
 }

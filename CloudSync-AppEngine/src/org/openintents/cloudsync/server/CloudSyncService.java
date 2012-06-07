@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.openintents.cloudsync.annotation.ServiceMethod;
 
+import com.ibm.icu.util.Calendar;
+
 
 
 
@@ -40,6 +42,13 @@ public class CloudSyncService {
 	@ServiceMethod
 	public List<Task> queryTasks() {
 		return db.findAll();
+	}
+	
+	@ServiceMethod
+	public Long getAppEngineTime() {
+		//Calendar cal = Calendar.getInstance();
+		//return cal.getTimeInMillis();
+		return (long) DataStore.getTime();
 	}
 
 }

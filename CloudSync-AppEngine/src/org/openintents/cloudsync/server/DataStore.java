@@ -11,6 +11,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
+import com.ibm.icu.util.Calendar;
 
 
 public class DataStore {
@@ -109,5 +110,12 @@ public class DataStore {
               ServletContext context = RequestFactoryServlet.getThreadLocalRequest().getSession().getServletContext();
               SendMessage.sendMessage(context, user.getEmail(), message);
       }
+	  
+	  public static long getTime() {
+		  //Calendar c=Calendar.getInstance();
+		  //c.getTime();
+		  return System.currentTimeMillis();
+		  //return (long) 1234;
+	  }
 
 }

@@ -34,6 +34,10 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+				<action android:name="vincent.start" />
+				 <category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
         </activity>
 
         <!-- Account selection activity -->
@@ -61,5 +65,19 @@
                 <category android:name="org.openintents.cloudsync" />
             </intent-filter>
         </receiver>
+        
+        <provider
+      android:name=".MyTimeContentProvider"
+      android:authorities="org.openintents.times.contentprovider" >
+   </provider>
+   <provider
+      android:name=".IdMapContentProvider"
+      android:authorities="org.openintents.idmap.contentprovider" >
+   </provider>
+   <provider
+      android:name=".ModifyContentProvider"
+      android:authorities="org.openintents.mods.contentprovider" >
+   </provider>
+   
     </application>
 </manifest>

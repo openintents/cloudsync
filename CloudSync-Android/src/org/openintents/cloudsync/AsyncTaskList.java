@@ -3,6 +3,7 @@ package org.openintents.cloudsync;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,6 +11,9 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.google.web.bindery.requestfactory.shared.Violation;
+
 import org.openintents.cloudsync.shared.CloudSyncRequest;
 import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
 import org.openintents.cloudsync.shared.TaskProxy;
@@ -102,6 +106,36 @@ public class AsyncTaskList extends AsyncTask<String[][], Void, String[][] > {
     	request.updateTask(task[1]);
     	request.fire();
     	Log.d(TAG, "Fire is done");
+    	
+    	CloudSyncRequestFactory factory1 = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
+    	factory1.taskRequest().getAppEngineTime().fire(new Receiver<Long>() {
+
+			@Override
+			public void onSuccess(Long time) {
+				Log.i("vincent", "inside succes of Async for getting the time from server");
+				Log.i("vincent", "long time is"+time.toString());
+				// new calendar inside the appEngine doesnot work
+				// use new Date() or System.getmilliseconds
+				
+				
+			}
+
+			@Override
+			public void onFailure(ServerFailure error) {
+				Log.i("vincent", "it has failed");
+				super.onFailure(error);
+			}
+
+			@Override
+			public void onViolation(Set<Violation> errors) {
+				Log.i("vincent", "did some violation");
+				super.onViolation(errors);
+			}
+			
+			
+			
+			
+		});
     	return null;
 	}
 

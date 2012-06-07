@@ -230,12 +230,8 @@ public class Util {
                 }
             }
         }
-        
-        //This change is only needed when the project is run on Ubuntu
-        //For windows users it is simply return url.
-        //Please make the necessary changes when running.
 
-        return new String ("http://10.0.2.2:8888");
+        return url;
     }
 
     /**
