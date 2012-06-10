@@ -1,0 +1,12 @@
+<!-- Indices written at Sun, 10 Jun 2012 02:38:03 UTC -->
+
+<datastore-indexes>
+
+    <!-- Used 18 times in query history -->
+    <datastore-index kind="Task" ancestor="false" source="auto">
+        <property name="appPackageName" direction="asc"/>
+        <property name="emailAddress" direction="asc"/>
+        <property name="timestamp" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>
