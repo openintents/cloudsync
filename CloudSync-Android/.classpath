@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="shared"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="libs/c2dm-sources.jar"/>
+	<classpathentry kind="lib" path="libs/c2dm.jar"/>
+	<classpathentry kind="lib" path="libs/requestfactory-client-src.jar"/>
+	<classpathentry kind="lib" path="libs/requestfactory-client.jar"/>
+	<classpathentry kind="lib" path="libs/validation-api-1.0.0.GA.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
