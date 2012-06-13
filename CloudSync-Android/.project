@@ -35,7 +35,7 @@
 		<link>
 			<name>shared</name>
 			<type>2</type>
-			<location>${WORKSPACE_LOC}/CloudSync-AppEngine/shared</location>
+			<location>$%7BPARENT-1-PROJECT_LOC%7D/CloudSync-AppEngine/shared</location>
 		</link>
 	</linkedResources>
 </projectDescription>
