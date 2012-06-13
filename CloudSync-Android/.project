@@ -35,7 +35,7 @@
 		<link>
 			<name>shared</name>
 			<type>2</type>
-			<location>F:/HandwrittenCode/EclipseWorkIndigoSR2/CloudSync-AppEngine/shared</location>
+			<location>${WORKSPACE_LOC}/CloudSync-AppEngine/shared</location>
 		</link>
 	</linkedResources>
 </projectDescription>
