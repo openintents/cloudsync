@@ -231,7 +231,8 @@ public class Util {
             }
         }
 
-        return url;
+        // return url; // for windows
+        return new String ("http://10.0.2.2:8888"); // for ubuntu
     }
 
     /**

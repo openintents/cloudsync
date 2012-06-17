@@ -11,6 +11,8 @@ public class IdMapTable {
 		public static final String COLUMN_LOCAL_ID = "localid";
 		public static final String COLUMN_APPENG_ID = "appid";
 		public static final String PACKAGE_NAME = "pckname";
+		public static final String TABLE_NAME = "tablename";
+		
 		// Database creation SQL statement
 		private static final String DATABASE_CREATE = "create table " 
 				+ TABLE_IDMAP

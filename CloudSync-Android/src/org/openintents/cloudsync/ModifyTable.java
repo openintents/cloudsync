@@ -11,6 +11,7 @@ public class ModifyTable {
 			public static final String COLUMN_LOCAL_ID = "localid";
 			public static final String COLUMN_MODIGY_DATE = "moddate";
 			public static final String PACKAGE_NAME = "pckname";
+			public static final String TABLE_NAME = "tablename";
 			// Database creation SQL statement
 			private static final String DATABASE_CREATE = "create table " 
 					+ TABLE_MODIFY

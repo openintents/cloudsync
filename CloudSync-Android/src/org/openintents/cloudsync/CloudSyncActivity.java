@@ -228,7 +228,7 @@ public class CloudSyncActivity extends Activity {
         //deleteAll.setVisibility(Button.INVISIBLE);
         deleteAll.setOnClickListener(new OnClickListener() {
 			
-			@Override
+			
 			public void onClick(View v) {
 				Uri timeDel = Uri.parse(MyTimeContentProvider.CONTENT_URI.toString());
 				Uri modDel = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
