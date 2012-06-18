@@ -65,7 +65,7 @@
                 <category android:name="org.openintents.cloudsync" />
             </intent-filter>
         </receiver>
-        
+    <!--    
         <provider
       android:name=".MyTimeContentProvider"
       android:authorities="org.openintents.times.contentprovider" >
@@ -77,6 +77,11 @@
    <provider
       android:name=".ModifyContentProvider"
       android:authorities="org.openintents.mods.contentprovider" >
+   </provider>
+   -->
+   <provider
+      android:name=".CloudSyncContentProvider"
+      android:authorities="org.openintents.cloudsync.contentprovider" >
    </provider>
    
     </application>

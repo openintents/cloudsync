@@ -202,10 +202,11 @@ public class CloudSyncActivity extends Activity {
         */
         
         // Lets print all the contents of the tables.
-        Cursor timeCur = getContentResolver().query(MyTimeContentProvider.CONTENT_URI, null, null, null, null);
-        Cursor idmapCur = getContentResolver().query(IdMapContentProvider.CONTENT_URI, null, null, null, null);
-        Cursor modCur = getContentResolver().query(ModifyContentProvider.CONTENT_URI, null, null, null , null);
-        timeCur.moveToFirst(); idmapCur.moveToFirst(); modCur.moveToFirst();
+        Cursor timeCur = getContentResolver().query(CloudSyncContentProvider.TIME_CONTENT_URI, null, null, null, null);
+        Cursor idmapCur = getContentResolver().query(CloudSyncContentProvider.IDMAPS_CONTENT_URI, null, null, null, null);
+        Cursor cloudMod = getContentResolver().query(CloudSyncContentProvider.MODIFY_CONTENT_URI, null, null, null, null);
+        
+        timeCur.moveToFirst(); idmapCur.moveToFirst(); cloudMod.moveToFirst();
         Log.v(TAGv, "time table");
         for(int i =0;i<timeCur.getCount();i++) {
         	Log.v(TAGv, "_id: "+timeCur.getString(0)+" : "+timeCur.getString(1));
@@ -218,10 +219,10 @@ public class CloudSyncActivity extends Activity {
         	idmapCur.moveToNext();
         }
         
-        Log.v(TAGv, "mod table");
-        for(int i =0;i<modCur.getCount();i++) {
-        	Log.v(TAGv, "_id: "+modCur.getString(0)+" : "+modCur.getString(1)+" : "+modCur.getString(2));
-        	modCur.moveToNext();
+        Log.v(TAGv, "The cloud mod table");
+        for(int i =0;i<cloudMod.getCount();i++) {
+        	Log.v(TAGv, "_id: "+cloudMod.getString(0)+" : "+cloudMod.getString(1)+" : "+cloudMod.getString(2));
+        	cloudMod.moveToNext();
         }
         
         
@@ -230,9 +231,9 @@ public class CloudSyncActivity extends Activity {
 			
 			
 			public void onClick(View v) {
-				Uri timeDel = Uri.parse(MyTimeContentProvider.CONTENT_URI.toString());
-				Uri modDel = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
-				Uri idDel = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
+				Uri timeDel = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
+				Uri modDel = Uri.parse(CloudSyncContentProvider.MODIFY_CONTENT_URI.toString());
+				Uri idDel = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
 				
 				int timeDelret = getContentResolver().delete(timeDel, null, null);
 				int modret = getContentResolver().delete(modDel, null, null);

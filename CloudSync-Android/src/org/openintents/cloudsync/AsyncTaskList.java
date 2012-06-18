@@ -45,7 +45,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		jsonBuilder = new StringBuilder();
 		String jsonData = params[0];
 		
-		Uri idmapUri = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
+		Uri idmapUri = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
 		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  activity.getCallingPackage() }, null);
 		long[][] idMapMatrix = null;
 		idMapMatrix =  getIdMapMatrix(idMapCursor);
@@ -233,7 +233,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		}
 		
 		// adding time of this sync in the timeTable
-		Uri timeUri = Uri.parse(MyTimeContentProvider.CONTENT_URI.toString());
+		Uri timeUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
 		ContentValues timeValue = new ContentValues();
 		timeValue.put(TimeTable.TIMESTAMP, timeofThisSync);
 		timeValue.put(TimeTable.PACKAGE_NAME, activity.getCallingPackage());
@@ -397,7 +397,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			Log.d(TAG, "exception in main json arra",e);
 		}
 		
-		Uri timeUri = Uri.parse(MyTimeContentProvider.CONTENT_URI.toString());
+		Uri timeUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
 		ContentValues timeValue = new ContentValues();
 		timeValue.put(TimeTable.TIMESTAMP, timeofThisSync);
 		timeValue.put(TimeTable.PACKAGE_NAME, activity.getCallingPackage());
@@ -562,7 +562,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 				long googleId = task.getId();
 				long localId = getIdFromRDarray(jsonString,rdArray);
 				
-				Uri idmapUri = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
+				Uri idmapUri = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
 				ContentValues values = new ContentValues();
 				values.put(IdMapTable.COLUMN_APPENG_ID, googleId);
 				values.put(IdMapTable.COLUMN_LOCAL_ID, localId);
@@ -600,7 +600,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 	private long getLastSyncTime() {
 		
-		Uri timeTableUri = Uri.parse(MyTimeContentProvider.CONTENT_URI.toString());
+		Uri timeTableUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
 		Cursor timeTableCursor = activity.getContentResolver().query(timeTableUri, null, TimeTable.PACKAGE_NAME+"=?", new String[] {  activity.getCallingPackage() } , TimeTable.TIMESTAMP);
 		
 		if(timeTableCursor.getCount() == 0) {
