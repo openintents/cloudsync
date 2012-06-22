@@ -48,7 +48,7 @@ public class CloudSyncActivity extends Activity {
      * Tag for logging.
      */
     private static final String TAG = "CloudSyncActivity";
-    private static final String TAGv = "debugv";
+    private static final boolean debug = true;
 
     /**
      * The current context.
@@ -90,7 +90,7 @@ public class CloudSyncActivity extends Activity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
+        if (debug) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         // Register a receiver to provide register/unregister notifications
@@ -135,12 +135,12 @@ public class CloudSyncActivity extends Activity {
         final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
         final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
         final Button deleteAll = (Button) findViewById(R.id.delete_all);
-        String tag="vincent";
+        
         
         
         /**
         Uri customUri = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
-        Log.d(tag, "customeUri:-> "+customUri.toString());
+        if (debug) Log.d(TAG, "customeUri:-> "+customUri.toString());
         
         ContentValues values = new ContentValues();
         values.put(IdMapTable.COLUMN_LOCAL_ID,100000+Math.round((Math.random()*30)));
@@ -149,17 +149,17 @@ public class CloudSyncActivity extends Activity {
         
         Uri insertUri;
         insertUri = getContentResolver().insert(customUri, values);
-        Log.d(tag, "inserted uri custom return:-> "+insertUri.toString());
+        if (debug) Log.d(TAG, "inserted uri custom return:-> "+insertUri.toString());
         
         Cursor customcurse = getContentResolver().query(customUri, null, null, null, null);
         if (customcurse.moveToFirst()) { }
 
         int totRows = customcurse.getCount();
-        Log.d(tag, "totalrow:-> "+totRows );
+        if (debug) Log.d(TAG, "totalrow:-> "+totRows );
         for(int i=0;i<totRows;i++) {
-        	Log.d(tag, customcurse.getString(0));
-        	Log.d(tag, customcurse.getString(1));
-        	Log.d(tag, customcurse.getString(2));
+        	if (debug) Log.d(TAG, customcurse.getString(0));
+        	if (debug) Log.d(TAG, customcurse.getString(1));
+        	if (debug) Log.d(TAG, customcurse.getString(2));
             customcurse.moveToNext();
         }
         
@@ -167,7 +167,7 @@ public class CloudSyncActivity extends Activity {
         Uri deleteUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
         deleteUri = Uri.withAppendedPath(deleteUri, "1");
         int delRetVal = getContentResolver().delete(deleteUri, null, null);
-        Log.d(tag, "the return value from the deleted op is : "+delRetVal);
+        if (debug) Log.d(TAG, "the return value from the deleted op is : "+delRetVal);
         */
         
         /**
@@ -176,7 +176,7 @@ public class CloudSyncActivity extends Activity {
         values.put(ModifyTable.COLUMN_LOCAL_ID, 0156);
         values.put(ModifyTable.COLUMN_MODIGY_DATE, 0154345);
         insertUri = getContentResolver().insert(modUri, values);
-        Log.d(tag, "inserted Mod uri is "+insertUri.toString());
+        if (debug) Log.d(TAG, "inserted Mod uri is "+insertUri.toString());
         
          modUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
         modUri = Uri.withAppendedPath(modUri, "1");
@@ -184,7 +184,7 @@ public class CloudSyncActivity extends Activity {
         values.put(ModifyTable.COLUMN_LOCAL_ID, 56);
         values.put(ModifyTable.COLUMN_MODIGY_DATE, 54345);
         int retVal = getContentResolver().update(modUri, values, null, null);
-        Log.d(tag, "after update on 1 _id the return value is:-> "+retVal);
+        if (debug) Log.d(TAG, "after update on 1 _id the return value is:-> "+retVal);
         
         modUri = Uri.parse(ModifyContentProvider.CONTENT_URI.toString());
         
@@ -192,11 +192,11 @@ public class CloudSyncActivity extends Activity {
         if (customcurse.moveToFirst()) { }
 
         totRows = customcurse.getCount();
-        Log.d(tag, "totalrow in modtable:-> "+totRows );
+        if (debug) Log.d(TAG, "totalrow in modtable:-> "+totRows );
         for(int i=0;i<totRows;i++) {
-        	Log.d(tag, customcurse.getString(0));
-        	Log.d(tag, customcurse.getString(1));
-        	Log.d(tag, customcurse.getString(2));
+        	if (debug) Log.d(TAG, customcurse.getString(0));
+        	if (debug) Log.d(TAG, customcurse.getString(1));
+        	if (debug) Log.d(TAG, customcurse.getString(2));
             customcurse.moveToNext();
         }
         */
@@ -207,21 +207,21 @@ public class CloudSyncActivity extends Activity {
         Cursor cloudMod = getContentResolver().query(CloudSyncContentProvider.MODIFY_CONTENT_URI, null, null, null, null);
         
         timeCur.moveToFirst(); idmapCur.moveToFirst(); cloudMod.moveToFirst();
-        Log.v(TAGv, "time table");
+        if (debug) Log.d(TAG, "time table");
         for(int i =0;i<timeCur.getCount();i++) {
-        	Log.v(TAGv, "_id: "+timeCur.getString(0)+" : "+timeCur.getString(1));
+        	if (debug) Log.d(TAG, "_id: "+timeCur.getString(0)+" : "+timeCur.getString(1));
         	timeCur.moveToNext();
         }
         
-        Log.v(TAGv, "idmap table");
+        if (debug) Log.d(TAG, "idmap table");
         for(int i =0;i<idmapCur.getCount();i++) {
-        	Log.v(TAGv, "_id: "+idmapCur.getString(0)+" : "+idmapCur.getString(1)+" : "+idmapCur.getString(2));
+        	if (debug) Log.d(TAG, "_id: "+idmapCur.getString(0)+" : "+idmapCur.getString(1)+" : "+idmapCur.getString(2));
         	idmapCur.moveToNext();
         }
         
-        Log.v(TAGv, "The cloud mod table");
+        if (debug) Log.d(TAG, "The cloud mod table");
         for(int i =0;i<cloudMod.getCount();i++) {
-        	Log.v(TAGv, "_id: "+cloudMod.getString(0)+" : "+cloudMod.getString(1)+" : "+cloudMod.getString(2));
+        	if (debug) Log.d(TAG, "_id: "+cloudMod.getString(0)+" : "+cloudMod.getString(1)+" : "+cloudMod.getString(2));
         	cloudMod.moveToNext();
         }
         
@@ -239,7 +239,7 @@ public class CloudSyncActivity extends Activity {
 				int modret = getContentResolver().delete(modDel, null, null);
 				int idret = getContentResolver().delete(idDel, null, null);
 				
-				Log.d(TAG, "returned vals "+timeDelret+" "+modret+" "+idret);
+				if (debug) Log.d(TAG, "returned vals "+timeDelret+" "+modret+" "+idret);
 				
 			}
 		});
@@ -258,7 +258,7 @@ public class CloudSyncActivity extends Activity {
                         MyRequestFactory requestFactory = Util.getRequestFactory(mContext,
                                 MyRequestFactory.class);
                         final HelloWorldRequest request = requestFactory.helloWorldRequest();
-                        Log.i(TAG, "Sending request to server");
+                        if (debug) Log.d(TAG, "Sending request to server");
                         request.getMessage().fire(new Receiver<String>() {
                             @Override
                             public void onFailure(ServerFailure error) {
@@ -307,7 +307,7 @@ public class CloudSyncActivity extends Activity {
     private void startSync() {
     	
     	Bundle extras = getIntent().getExtras();
-    	Log.d("vincent","intent notesyndemo"+getIntent().describeContents()+"and action is:"+getIntent().getAction());
+    	if (debug) Log.d(TAG,"intent notesyndemo"+getIntent().describeContents()+"and action is:"+getIntent().getAction());
     	
     	String jsonData = "";
     	if(getIntent().getAction().equalsIgnoreCase("vincent.start")) {

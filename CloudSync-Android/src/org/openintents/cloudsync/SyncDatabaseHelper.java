@@ -9,6 +9,8 @@ public class SyncDatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "syncsecond.db";
 	private static final int DATABASE_VERSION = 1;
+	private static final String TAG = "SyncDatabaseHelper";
+	private static final boolean debug = true;
 
 	public SyncDatabaseHelper(Context context) {
 		
@@ -19,7 +21,7 @@ public class SyncDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d("vincent", "inside syncdatabase helper on create");
+		if(debug) Log.d(TAG, "inside syncdatabase helper on create");
 		TimeTable.onCreate(db);
 		IdMapTable.onCreate(db);
 		ModifyTable.onCreate(db);

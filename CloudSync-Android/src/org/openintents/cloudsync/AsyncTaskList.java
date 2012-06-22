@@ -26,13 +26,12 @@ import com.google.web.bindery.requestfactory.shared.Violation;
 
 public class AsyncTaskList extends AsyncTask<String, Void, String > {
 	private static final String TAG = "CloudSyncActivity";
-	private static final String TAGv = "debugv";
 	private static final int ID_MAP_MATRIX_LOCAL_ID = 0;
 	private static final int ID_MAP_MATRIX_GOOGLE_ID = 1;
 	CloudSyncActivity activity;
-	static String tag = "vincent";
 	private static long timeofThisSync ;
 	private static StringBuilder jsonBuilder = new StringBuilder();
+	private static final boolean debug = true;
 	
 	public AsyncTaskList(CloudSyncActivity activity) {
 		this.activity = activity;
@@ -41,7 +40,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 	@Override
 	protected String doInBackground(String... params) {
 		
-		Log.i("vincent", "inside the async");
+		if (debug) Log.d(TAG, "inside the async");
 		jsonBuilder = new StringBuilder();
 		String jsonData = params[0];
 		
@@ -49,9 +48,9 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  activity.getCallingPackage() }, null);
 		long[][] idMapMatrix = null;
 		idMapMatrix =  getIdMapMatrix(idMapCursor);
-		Log.d(TAG, "length of idMapMatrix: "+idMapMatrix.length);
+		if (debug) Log.d(TAG, "length of idMapMatrix: "+idMapMatrix.length);
 		
-		Log.d(TAG, "recieved string is: "+jsonData);
+		if (debug) Log.d(TAG, "recieved string is: "+jsonData);
 		RecievedData[] rdArray=null;
 		try {
 			// take care when nothing is sent for the sync, then call fetchData and return the value to post execute DONE
@@ -65,20 +64,20 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			}
 			
 			rdArray = new RecievedData[jsonArray.length()];
-			Log.d(TAG, "length of rdArray: "+rdArray.length);
+			if (debug) Log.d(TAG, "length of rdArray: "+rdArray.length);
 			for(int i=0;i<jsonArray.length();i++) {
 				JSONObject jobj = jsonArray.getJSONObject(i);
 				int localid = jobj.getInt("id");
 				String jsonString = jobj.getString("jsonString");
-				//Log.d(TAG, "local id and json in jarray is: "+localid+" "+jsonString);
+				//if (debug) Log.d(TAG, "local id and json in jarray is: "+localid+" "+jsonString);
 				rdArray[i] = new RecievedData(localid, jsonString);
-				Log.d(TAG, "local id inside the RD object: "+rdArray[i].local_id+" "+rdArray[i].jsonString);
+				if (debug) Log.d(TAG, "local id inside the RD object: "+rdArray[i].local_id+" "+rdArray[i].jsonString);
 				
 				
 			}
 			
 		} catch (JSONException e) {
-			Log.d(TAG, "json exception occured",e);
+			if (debug) Log.d(TAG, "json exception occured",e);
 		}
 		
 		LinkedList<Long> updateList =  new LinkedList<Long>();
@@ -87,19 +86,19 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		for(int i =0;i<rdArray.length;i++) {
 			flag = false;
 			for(int j=0;j<idMapMatrix.length;j++) {
-				Log.v(TAGv, "the rdArray elem and idmapmatrix elem: "+rdArray[i].local_id+" : "+idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]);
+				if (debug) Log.d(TAG, "the rdArray elem and idmapmatrix elem: "+rdArray[i].local_id+" : "+idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]);
 				if(rdArray[i].local_id == idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]) {
 					flag = true;
 					
 					updateList.add(rdArray[i].local_id);
-					Log.d(TAG, "updating the list updateList with id: "+rdArray[i].local_id);
+					if (debug) Log.d(TAG, "updating the list updateList with id: "+rdArray[i].local_id);
 					break;
 				}
 			}
 			
 			if(!flag) {
 				insertList.add(rdArray[i].local_id);
-				Log.d(TAG, "inserting the list rdArray with id: "+rdArray[i].local_id);
+				if (debug) Log.d(TAG, "inserting the list rdArray with id: "+rdArray[i].local_id);
 			}
 		}
 		
@@ -110,17 +109,17 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 			@Override
 			public void onSuccess(Long time) {
-				Log.i("vincent", "[main] inside succes for getting time");
-				Log.i("vincent", "[main] long time is"+time.toString());
+				if (debug) Log.d(TAG, "[main] inside succes for getting time");
+				if (debug) Log.d(TAG, "[main] long time is"+time.toString());
 				tempArray.add(time);
 				// new calendar inside the appEngine doesnot work
 				// use new Date() or System.getmilliseconds
-				//Log.d(TAG, "time of this sync: "+tempArray.get(0));
+				//if (debug) Log.d(TAG, "time of this sync: "+tempArray.get(0));
 			}
 
 			@Override
 			public void onFailure(ServerFailure error) {
-				Log.i("vincent", "[main] it has failed");
+				if (debug) Log.d(TAG, "[main] it has failed");
 				super.onFailure(error);
 			}
     	});
@@ -131,14 +130,14 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
     	
     	final List<TaskProxy> list = new ArrayList<TaskProxy>();		
 		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
-		Log.d("vincent", "[main] going to do the query of tasks with package name param, and timestamp greate than: "+timeOfLastSync);
+		if (debug) Log.d(TAG, "[main] going to do the query of tasks with package name param, and timestamp greate than: "+timeOfLastSync);
 		factory.taskRequest().queryTasks(activity.getCallingPackage(),timeOfLastSync).fire(new Receiver<List<TaskProxy>>() {
 
 			@Override
 			public void onSuccess(List<TaskProxy> arg0) {
 				
 				list.addAll(arg0);
-				Log.d(tag, "Size of list"+list.size());
+				if (debug) Log.d(TAG, "Size of list"+list.size());
 				
 			} 
 			
@@ -147,22 +146,22 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		
 		
 		int il = list.size();
-		Log.d(TAG, "[main] inside Asynctasklist: size of list returned from server"+list.size());
+		if (debug) Log.d(TAG, "[main] inside Asynctasklist: size of list returned from server"+list.size());
 		
 		// only for logging purpose <start>
 		
 		if(il==0) { 
-			Log.d(TAG, "size of taskList returned from server is 0");
+			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
 			} 
 		
 		else {
 			for(TaskProxy task:list) {
-				Log.d(TAG, "[main] "+task.getId());
-				//Log.d(TAG, ""+task.getLocallyGeneratedUID());				
-				Log.d(TAG, "[main] "+task.getTimestamp());
-				//Log.d(TAG, ""+task.getTag());
-				Log.d(TAG, "[main] "+task.getAppPackageName());
-				Log.d(TAG, "[main] "+task.getJsonStringData());
+				if (debug) Log.d(TAG, "[main] "+task.getId());
+				//if (debug) Log.d(TAG, ""+task.getLocallyGeneratedUID());				
+				if (debug) Log.d(TAG, "[main] "+task.getTimestamp());
+				//if (debug) Log.d(TAG, ""+task.getTag());
+				if (debug) Log.d(TAG, "[main] "+task.getAppPackageName());
+				if (debug) Log.d(TAG, "[main] "+task.getJsonStringData());
 				// Json strig should be made at last afer the conflict resolution.
 			}		
 			
@@ -172,15 +171,15 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		
 		// logging <end>
 		CloudSyncRequest request = factory.taskRequest();     
-        Log.d(TAG,"[main] going to insert new Entities into AppEngine");
+        if (debug) Log.d(TAG,"[main] going to insert new Entities into AppEngine");
         
         if(insertList.size()>0) {
         	TaskProxy[] task = new TaskProxy[insertList.size()]; 
-            Log.i(TAG,"[main] made the taskproxy array");
+            if (debug) Log.d(TAG,"[main] made the taskproxy array");
             for(int i=0;i<insertList.size();i++) { 
             	task[i] = request.create(TaskProxy.class);
             	String tempJString = getJsonFromRDarray(insertList.get(i),rdArray);
-            	task[i].setJsonStringData(tempJString);// Log.d(TAG, "the json string going to be inserted: "+tempJString);
+            	task[i].setJsonStringData(tempJString);// if (debug) Log.d(TAG, "the json string going to be inserted: "+tempJString);
             	task[i].setAppPackageName(activity.getCallingPackage());
             	task[i].setTimestamp(timeofThisSync);
             	request.updateTask(task[i]);
@@ -200,17 +199,17 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
         // Make the jsonString to be sent to the OI Notes
         // If it is new then -1 is returned else their original id is returned inside jsonData
         if(il==0) { 
-			Log.d(TAG, "size of taskList returned from server is 0");
+			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
 			} 
 		
 		else {
 			for(TaskProxy task:list) {
-				Log.d(TAG, "for adding in json id:"+task.getId());
-				//Log.d(TAG, ""+task.getLocallyGeneratedUID());				
-				Log.d(TAG, ""+task.getTimestamp());
-				//Log.d(TAG, ""+task.getTag());
-				Log.d(TAG, ""+task.getAppPackageName());
-				Log.d(TAG, ""+task.getJsonStringData());
+				if (debug) Log.d(TAG, "for adding in json id:"+task.getId());
+				//if (debug) Log.d(TAG, ""+task.getLocallyGeneratedUID());				
+				if (debug) Log.d(TAG, ""+task.getTimestamp());
+				//if (debug) Log.d(TAG, ""+task.getTag());
+				if (debug) Log.d(TAG, ""+task.getAppPackageName());
+				if (debug) Log.d(TAG, ""+task.getJsonStringData());
 				// Json string should be made at last afer the conflict resolution.
 				long gId = task.getId();
 				long localId = getLocalIdFromMapMatrix(gId, idMapMatrix);
@@ -224,12 +223,12 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			jsonBuilderString = jsonBuilder.substring(0, jsonBuilder.length()-1);
 		}
 		String jsonDataRet = "{ \"data\" : [" + jsonBuilderString + "] }";
-		Log.d(TAG, jsonDataRet);
+		if (debug) Log.d(TAG, jsonDataRet);
 		try {
 		    JSONObject mainJobj = new JSONObject(jsonDataRet);
 			JSONArray jarray = mainJobj.getJSONArray("data");
 		} catch (JSONException e) {
-			Log.d(TAG, "exception in main json arra",e);
+			if (debug) Log.d(TAG, "exception in main json arra",e);
 		}
 		
 		// adding time of this sync in the timeTable
@@ -238,7 +237,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		timeValue.put(TimeTable.TIMESTAMP, timeofThisSync);
 		timeValue.put(TimeTable.PACKAGE_NAME, activity.getCallingPackage());
 		Uri insTime = activity.getContentResolver().insert(timeUri, timeValue);
-		Log.d(TAG, "Inserted time uri is "+insTime.toString());
+		if (debug) Log.d(TAG, "Inserted time uri is "+insTime.toString());
 		return jsonDataRet;	
 			
         
@@ -263,7 +262,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
     	task[0].setAppPackageName("com.vettukal.oi");
     	task[0].setJsonStringData("this must be very very long string in randome order");
     	
-    	Log.d(TAG, "made the first task proxy");
+    	if (debug) Log.d(TAG, "made the first task proxy");
     	task[1] = request.create(TaskProxy.class);
     	
     	
@@ -277,7 +276,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
     	request.updateTask(task[0]);
     	request.updateTask(task[1]);
     	request.fire();
-    	Log.d(TAG, "Fire is done");
+    	if (debug) Log.d(TAG, "Fire is done");
     	*/
 		
         /**
@@ -286,8 +285,8 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 			@Override
 			public void onSuccess(Long time) {
-				Log.i("vincent", "inside succes of Async for getting the time from server");
-				Log.i("vincent", "long time is"+time.toString());
+				if (debug) Log.d(TAG, "inside succes of Async for getting the time from server");
+				if (debug) Log.d(TAG, "long time is"+time.toString());
 				// new calendar inside the appEngine doesnot work
 				// use new Date() or System.getmilliseconds
 				
@@ -296,13 +295,13 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 			@Override
 			public void onFailure(ServerFailure error) {
-				Log.i("vincent", "it has failed");
+				if (debug) Log.d(TAG, "it has failed");
 				super.onFailure(error);
 			}
 
 			@Override
 			public void onViolation(Set<Violation> errors) {
-				Log.i("vincent", "did some violation");
+				if (debug) Log.d(TAG, "did some violation");
 				super.onViolation(errors);
 			}
 		});
@@ -312,7 +311,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 	private String fetchData(long[][] idMapMatrix) {
 		
-		Log.d("debugv", "inside the fetchData only");
+		if (debug) Log.d(TAG, "inside the fetchData only");
 		final List<Long> tempArray = new ArrayList<Long>(); 
 		// using this temparray as i dont know how use only long and value out. 
 		CloudSyncRequestFactory timeFactory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
@@ -320,17 +319,17 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 
 			@Override
 			public void onSuccess(Long time) {
-				Log.i("vincent", "inside succes of Async for getting the time from server");
-				Log.i("vincent", "long time is"+time.toString());
+				if (debug) Log.d(TAG, "inside succes of Async for getting the time from server");
+				if (debug) Log.d(TAG, "long time is"+time.toString());
 				tempArray.add(time);
 				// new calendar inside the appEngine doesnot work
 				// use new Date() or System.getmilliseconds
-				Log.d(TAG, "time of this sync: "+tempArray.get(0));
+				if (debug) Log.d(TAG, "time of this sync: "+tempArray.get(0));
 			}
 
 			@Override
 			public void onFailure(ServerFailure error) {
-				Log.i("vincent", "it has failed");
+				if (debug) Log.d(TAG, "it has failed");
 				super.onFailure(error);
 			}
     	});
@@ -340,41 +339,41 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
     	long timeOfLastSync = getLastSyncTime();
     	final List<TaskProxy> list = new ArrayList<TaskProxy>();		
 		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
-		Log.d("vincent", "going to do the query of tasks with package name param, and timestamp greate than: "+timeOfLastSync);
+		if (debug) Log.d(TAG, "going to do the query of tasks with package name param, and timestamp greate than: "+timeOfLastSync);
 		factory.taskRequest().queryTasks(activity.getCallingPackage(),timeOfLastSync).fire(new Receiver<List<TaskProxy>>() {
 
 			@Override
 			public void onSuccess(List<TaskProxy> arg0) {
-				Log.i("vincent", "inside succes of Async");
+				if (debug) Log.d(TAG, "inside succes of Async");
 				
 				
-				Log.d(tag, "Size of list"+list.size());
+				if (debug) Log.d(TAG, "Size of list"+list.size());
 				list.addAll(arg0);
-				Log.d(tag, "Size of list"+list.size());
+				if (debug) Log.d(TAG, "Size of list"+list.size());
 				
 			} 
 			
 			
 		});
 		
-		Log.i("vincent", "async completed taking the list");
+		if (debug) Log.d(TAG, "async completed taking the list");
 		int il = list.size();
-		Log.d(TAG, "inside Asynctasklist: size of list returned from server"+list.size());
+		if (debug) Log.d(TAG, "inside Asynctasklist: size of list returned from server"+list.size());
 		
 		// only for logging purpose <start>
 		
 		if(il==0) { 
-			Log.d(TAG, "size of taskList returned from server is 0");
+			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
 			} 
 		
 		else {
 			for(TaskProxy task:list) {
-				Log.d(TAG, ""+task.getId());
-				//Log.d(TAG, ""+task.getLocallyGeneratedUID());				
-				Log.d(TAG, ""+task.getTimestamp());
-				//Log.d(TAG, ""+task.getTag());
-				Log.d(TAG, ""+task.getAppPackageName());
-				Log.d(TAG, ""+task.getJsonStringData());
+				if (debug) Log.d(TAG, ""+task.getId());
+				//if (debug) Log.d(TAG, ""+task.getLocallyGeneratedUID());				
+				if (debug) Log.d(TAG, ""+task.getTimestamp());
+				//if (debug) Log.d(TAG, ""+task.getTag());
+				if (debug) Log.d(TAG, ""+task.getAppPackageName());
+				if (debug) Log.d(TAG, ""+task.getJsonStringData());
 				
 				long gId = task.getId();
 				long localId = getLocalIdFromMapMatrix(gId, idMapMatrix);
@@ -389,12 +388,12 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			jsonBuilderString = jsonBuilder.substring(0, jsonBuilder.length()-1);
 		}
 		String jsonDataRet = "{ \"data\" : [" + jsonBuilderString + "] }";
-		Log.d(TAG, jsonDataRet);
+		if (debug) Log.d(TAG, jsonDataRet);
 		try {
 		    JSONObject mainJobj = new JSONObject(jsonDataRet);
 			JSONArray jarray = mainJobj.getJSONArray("data");
 		} catch (JSONException e) {
-			Log.d(TAG, "exception in main json arra",e);
+			if (debug) Log.d(TAG, "exception in main json arra",e);
 		}
 		
 		Uri timeUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
@@ -402,7 +401,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		timeValue.put(TimeTable.TIMESTAMP, timeofThisSync);
 		timeValue.put(TimeTable.PACKAGE_NAME, activity.getCallingPackage());
 		Uri insTime = activity.getContentResolver().insert(timeUri, timeValue);
-		Log.d(TAG, "Inserted time uri is "+insTime.toString());
+		if (debug) Log.d(TAG, "Inserted time uri is "+insTime.toString());
 		
 		return jsonDataRet;	
 		
@@ -430,7 +429,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		final List<TaskProxy> list = new ArrayList<TaskProxy>();		
 		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
 		CloudSyncRequest request1 = factory.taskRequest();    
-		Log.d("vincent", "[updateEntitiesInGoogleAppEngine] going to do the query for modification on AppEngine with this list: "+ gIdList.toString());
+		if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] going to do the query for modification on AppEngine with this list: "+ gIdList.toString());
 		//if the list size of updateList is 0 there is nothing to be updated just return
 		request1.queryGoogleIdList(activity.getCallingPackage(),gIdList).fire(new Receiver<List<TaskProxy>>() {
 
@@ -441,7 +440,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 				
 				
 				list.addAll(arg0);
-				Log.d(tag, "[updateEntitiesInGoogleAppEngine] Size of list to be modified returned from Engine: "+list.size());
+				if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] Size of list to be modified returned from Engine: "+list.size());
 				
 			} 
 			
@@ -451,22 +450,22 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		
 		int il = list.size();
 		if(il==0) { 
-			Log.d(TAG, "[updateEntitiesInGoogleAppEngine] size of taskList returned from server is 0");
+			if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] size of taskList returned from server is 0");
 			} 
 		
 		else {
 			for(TaskProxy task:list) {
-				Log.d(TAG, "[updateEntitiesInGoogleAppEngine] id: "+task.getId());
-				//Log.d(TAG, ""+task.getLocallyGeneratedUID());				
-				Log.d(TAG, "[updateEntitiesInGoogleAppEngine] TS: "+task.getTimestamp());
-				//Log.d(TAG, ""+task.getTag());
-				Log.d(TAG, ""+task.getAppPackageName());
-				//Log.d(TAG, ""+task.getJsonStringData());
+				if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] id: "+task.getId());
+				//if (debug) Log.d(TAG, ""+task.getLocallyGeneratedUID());				
+				if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] TS: "+task.getTimestamp());
+				//if (debug) Log.d(TAG, ""+task.getTag());
+				if (debug) Log.d(TAG, ""+task.getAppPackageName());
+				//if (debug) Log.d(TAG, ""+task.getJsonStringData());
 				
 				long gId = task.getId();
 				long localId = getLocalIdFromMapMatrix(gId, idMapMatrix);
 				String jsonString = getJsonFromRDarray(localId, rdArray);
-				Log.v(TAGv, "[updateEntitiesInGoogleAppEngine] json data for Gid: "+gId+" ; "+jsonString);
+				if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] json data for Gid: "+gId+" ; "+jsonString);
 				
 			}		
 			
@@ -486,7 +485,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			long gId = list.get(i).getId();
 			long localId = getLocalIdFromMapMatrix(gId, idMapMatrix);
 			String jsonString = getJsonFromRDarray(localId, rdArray);
-			Log.v(TAGv, "[updateEntitiesInGoogleAppEngine] json data for Gid: "+gId+" ; "+jsonString);
+			if (debug) Log.d(TAG, "[updateEntitiesInGoogleAppEngine] json data for Gid: "+gId+" ; "+jsonString);
 			task[i].setJsonStringData(jsonString);
 			task[i].setAppPackageName(activity.getCallingPackage());
 			task[i].setTimestamp(timeofThisSync);
@@ -523,18 +522,18 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		// First fetch all the data with same timeStamp as timeOfThisSync
 		final List<TaskProxy> list = new ArrayList<TaskProxy>();
 		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
-		Log.d("vincent", "going to do the query of newly created tasks to update the idMapTable with exact time: "+timeofThisSync);
+		if (debug) Log.d(TAG, "going to do the query of newly created tasks to update the idMapTable with exact time: "+timeofThisSync);
 		// This returns only entities persisted during this sync right before this calling
 		factory.taskRequest().queryExactTimeStamp(activity.getCallingPackage(),timeofThisSync).fire(new Receiver<List<TaskProxy>>() {
 
 			@Override
 			public void onSuccess(List<TaskProxy> arg0) {
-				//Log.i("vincent", "inside succes of Async");
+				//if (debug) Log.d(TAG, "inside succes of Async");
 				
 				
-				//Log.d(tag, "Size of list"+list.size());
+				//if (debug) Log.d(TAG, "Size of list"+list.size());
 				list.addAll(arg0);
-				Log.d(tag, "[updateIdMapTable] Size of list"+list.size());
+				if (debug) Log.d(TAG, "[updateIdMapTable] Size of list"+list.size());
 				
 			} 
 			
@@ -544,18 +543,18 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		
 		int il = list.size();
 		if(il==0) { 
-			Log.d(TAG, "size of taskList returned from server is 0");
+			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
 			} 
 		
 		else {
 			for(TaskProxy task:list) {
 				// <log start>
-				Log.d(TAG, "[updateIdMapTable] task id: "+task.getId());
-				//Log.d(TAG, ""+task.getLocallyGeneratedUID());				
-				Log.d(TAG, "[updateIdMapTable] task TS: "+task.getTimestamp());
-				//Log.d(TAG, ""+task.getTag());
-				Log.d(TAG, "[updateIdMapTable] "+task.getAppPackageName());
-				Log.d(TAG, "[updateIdMapTable] "+task.getJsonStringData());
+				if (debug) Log.d(TAG, "[updateIdMapTable] task id: "+task.getId());
+				//if (debug) Log.d(TAG, ""+task.getLocallyGeneratedUID());				
+				if (debug) Log.d(TAG, "[updateIdMapTable] task TS: "+task.getTimestamp());
+				//if (debug) Log.d(TAG, ""+task.getTag());
+				if (debug) Log.d(TAG, "[updateIdMapTable] "+task.getAppPackageName());
+				if (debug) Log.d(TAG, "[updateIdMapTable] "+task.getJsonStringData());
 				// <log end>
 				
 				String jsonString = task.getJsonStringData();
@@ -568,7 +567,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 				values.put(IdMapTable.COLUMN_LOCAL_ID, localId);
 				values.put(IdMapTable.PACKAGE_NAME, activity.getCallingPackage());
 				Uri insertedUri = activity.getContentResolver().insert(idmapUri, values);
-				Log.d(TAG, insertedUri.toString());
+				if (debug) Log.d(TAG, insertedUri.toString());
 				
 			}		
 			
@@ -607,29 +606,29 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 			return 0;
 		}
 		timeTableCursor.moveToLast(); //  check whether it returns the highest value checked
-		Log.d(TAG, "the lastSync time is: "+timeTableCursor.getLong(1));
+		if (debug) Log.d(TAG, "the lastSync time is: "+timeTableCursor.getLong(1));
 		return timeTableCursor.getLong(1);
 	}
 
 	private long[][] getIdMapMatrix(Cursor idMapCursor) {
-		Log.v(TAGv,"Going to make an Id map matrix");
+		if (debug) Log.d(TAG,"Going to make an Id map matrix");
 		int tempi = idMapCursor.getCount();
 		long[][] idMapMatrix = new long[idMapCursor.getCount()][2];
 		idMapCursor.moveToFirst();
 		for(int i=0;i<idMapMatrix.length;i++) {
-			//Log.v(TAGv,"idmapcursor1: "+idMapCursor.getShort(columnIndex))
+			//if (debug) Log.d(TAG,"idmapcursor1: "+idMapCursor.getShort(columnIndex))
 			idMapMatrix[i][0] = Long.valueOf(idMapCursor.getString(1));
 			idMapMatrix[i][1] = Long.valueOf(idMapCursor.getString(2));
 			idMapCursor.moveToNext();
-			Log.d(TAG, ""+idMapMatrix[i][0]+" "+idMapMatrix[i][1]);
+			if (debug) Log.d(TAG, ""+idMapMatrix[i][0]+" "+idMapMatrix[i][1]);
 		}
-		Log.d(TAG, "length of the idmapmatrix is "+idMapMatrix.length);
+		if (debug) Log.d(TAG, "length of the idmapmatrix is "+idMapMatrix.length);
 		return idMapMatrix;
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		Log.d(tag, "inside the post execute");
+		if (debug) Log.d(TAG, "inside the post execute");
 		activity.doneSyncing();
 		activity.sendResult(result);
 		
@@ -640,7 +639,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 	/**
 	@Override
 	protected void onPostExecute(String[][] serverArr) {
-		Log.d(TAG, "onPostExecute() of asynctasklist" );
+		if (debug) Log.d(TAG, "onPostExecute() of asynctasklist" );
 		activity.setServerArr(serverArr);
 	}
 	*/
