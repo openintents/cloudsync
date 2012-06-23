@@ -61,15 +61,26 @@
         android:layout_marginTop="5px"
         android:layout_weight="1" />
 
+    <Button
+        android:id="@+id/purge_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/delete_all"
+        android:text="@string/purge_all" />
+
     <TextView
         android:id="@+id/hello_world"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/delete_all"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/purge_button"
+        android:background="#000000"
         android:gravity="center"
         android:padding="10dip"
-        android:background="#000000"
-        android:textColor="#ffffff"
         android:text="@string/hello_world_text"
-        android:textSize="16dip"/>
+        android:textColor="#ffffff"
+        android:textSize="16dip" />
+
 </RelativeLayout>

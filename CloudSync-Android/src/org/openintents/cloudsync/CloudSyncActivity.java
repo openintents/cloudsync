@@ -290,6 +290,16 @@ public class CloudSyncActivity extends Activity {
             }
 			       
         });
+        
+        final Button purgeButton = (Button) findViewById(R.id.purge_button);
+        purgeButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				helloWorld.setText("Going to Delete All Data in AppEngine");
+				
+			}
+		});
     }
 
     /**

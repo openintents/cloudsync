@@ -70,5 +70,13 @@ public class CloudSyncService {
 	public List<Task> queryGoogleIdList(String packageName, List<Long> idList) {
 		return db.findGoogleIdList(packageName,idList);
 	}
+	
+	@ServiceMethod
+	public Integer deleteAll(String packageName) {
+		return db.purgeAll(packageName);
+	}
+	
+	
+	
 
 }

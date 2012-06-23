@@ -29,6 +29,8 @@ public interface CloudSyncRequest extends RequestContext {
 
 	Request<List<TaskProxy>> queryGoogleIdList(String packageName, List<Long> idList);
 
+	Request<Integer> deleteAll(String packageName);
+
 	
 
 	
