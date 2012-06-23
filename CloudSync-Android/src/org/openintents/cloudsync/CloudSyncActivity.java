@@ -352,9 +352,9 @@ public class CloudSyncActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				
-				purgeAllRecords();
 				popupWindow.dismiss();
+				purgeAllRecords();
+				
 			}
 		});
     }
@@ -410,17 +410,32 @@ public class CloudSyncActivity extends Activity {
 		
 		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
 		helloWorld.setText("Deleting all the records from server");
-    	CloudSyncRequestFactory deleteFactory = Util.getRequestFactory(this, CloudSyncRequestFactory.class);
-    	deleteFactory.taskRequest().deleteAll(getCallingPackage()).fire(new Receiver<Integer>() {
+		// Use an AsyncTask to avoid blocking the UI thread
+		final CloudSyncRequestFactory deleteFactory = Util.getRequestFactory(this, CloudSyncRequestFactory.class);
+        new AsyncTask<Void, Void, String>() {
+            private String message;
 
-			@Override
-			public void onSuccess(Integer deleteRowCount) {
-				val=deleteRowCount;
-			
-			}
-    	});
+            @Override
+            protected String doInBackground(Void... arg0) {
+            	deleteFactory.taskRequest().deleteAll(getCallingPackage()).fire(new Receiver<Integer>() {
+
+        			@Override
+        			public void onSuccess(Integer deleteRowCount) {
+        				val=deleteRowCount;
+        			
+        			}
+            	});
+            	message = val.toString();
+                return message;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+            	helloWorld.setText("Done! Number of entries deleted is: "+val);
+            }
+        }.execute();
     	
-    	helloWorld.setText("Done! Number of entries deleted is: "+val);
+    	
     	
 	}
 
