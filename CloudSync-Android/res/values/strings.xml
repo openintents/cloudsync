@@ -68,5 +68,9 @@
     <string name="unregistration_succeeded">Unegistered %1$s for C2DM messaging.</string>
     <string name="sync_test_text">Sync the data </string>
     <string name="purge_all">Purge All Data on AppEngine</string>
+    
+    <string name="r_u_sure">Are you sure you want to delete</string>
+    <string name="cancle">Cancel</string>
+    <string name="yes">Yes</string>
 
 </resources>

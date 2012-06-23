@@ -16,28 +16,37 @@ package org.openintents.cloudsync;
 
 import org.openintents.cloudsync.client.MyRequestFactory;
 import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
+import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+
 
 /**
  * Main activity - requests "Hello, World" messages from the server and provides
@@ -49,6 +58,7 @@ public class CloudSyncActivity extends Activity {
      */
     private static final String TAG = "CloudSyncActivity";
     private static final boolean debug = true;
+    private static Integer val;
 
     /**
      * The current context.
@@ -290,19 +300,66 @@ public class CloudSyncActivity extends Activity {
             }
 			       
         });
-        
-        final Button purgeButton = (Button) findViewById(R.id.purge_button);
-        purgeButton.setOnClickListener(new OnClickListener() {
+    }
+    
+    public void purgeOnServer(View v) {
+    	if (debug) Log.i(TAG,"going to delete data on Server");
+    	if (debug) Log.d(TAG,"The caling package is:-> "+getCallingPackage());
+    	if(getCallingPackage()==null) {
+    		//TODO: it has to be checked whether the calling package is valid or not.
+    		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    		helloWorld.setText("Call me from OI Note to delete to Continue");
+    		return;
+    	}
+    	
+    	
+    	LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+				.getSystemService(LAYOUT_INFLATER_SERVICE);
+		View popupView = layoutInflater.inflate(R.layout.pop_up, null);
+		final PopupWindow popupWindow = new PopupWindow(popupView,
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		
+		popupView.setBackgroundColor(Color.BLACK);
+		popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+		
+		Button btnDismiss = (Button) popupView.findViewById(R.id.cancel);
+		final Button btnYes = (Button) popupView.findViewById(R.id.confirm);
+		final CheckBox checkb = (CheckBox) popupView.findViewById(R.id.ck_del);
+		checkb.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public void onClick(View arg0) {
-				helloWorld.setText("Going to Delete All Data in AppEngine");
+			public void onClick(View v) {
+				if(checkb.isChecked()==true) {
+					btnYes.setEnabled(true);	
+					}
+					else {
+						btnYes.setEnabled(false);
+					}
 				
 			}
 		});
-    }
+		
+		btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
-    /**
+			@Override
+			public void onClick(View v) {
+				
+				popupWindow.dismiss();
+			}
+		});
+		
+		btnYes.setOnClickListener(new Button.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				purgeAllRecords();
+				popupWindow.dismiss();
+			}
+		});
+    }
+		
+	/**
      * Sets the screen content based on the screen id.
      */
     private void setScreenContent(int screenId) {
@@ -348,4 +405,24 @@ public class CloudSyncActivity extends Activity {
 		setResult(0,i);
 		finish();
 	}
+	
+	protected void purgeAllRecords() {
+		
+		final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+		helloWorld.setText("Deleting all the records from server");
+    	CloudSyncRequestFactory deleteFactory = Util.getRequestFactory(this, CloudSyncRequestFactory.class);
+    	deleteFactory.taskRequest().deleteAll(getCallingPackage()).fire(new Receiver<Integer>() {
+
+			@Override
+			public void onSuccess(Integer deleteRowCount) {
+				val=deleteRowCount;
+			
+			}
+    	});
+    	
+    	helloWorld.setText("Done! Number of entries deleted is: "+val);
+    	
+	}
+
+	
 }
