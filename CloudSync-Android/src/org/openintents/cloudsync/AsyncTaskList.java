@@ -43,7 +43,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		if (debug) Log.d(TAG, "inside the async");
 		jsonBuilder = new StringBuilder();
 		String jsonData = params[0];
-		
+		String deleteData = params[1];
 		Uri idmapUri = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
 		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  activity.getCallingPackage() }, null);
 		long[][] idMapMatrix = null;
@@ -51,6 +51,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		if (debug) Log.d(TAG, "length of idMapMatrix: "+idMapMatrix.length);
 		
 		if (debug) Log.d(TAG, "recieved string is: "+jsonData);
+		if (debug) Log.d(TAG,"deleted message is "+deleteData);
 		RecievedData[] rdArray=null;
 		try {
 			// take care when nothing is sent for the sync, then call fetchData and return the value to post execute DONE
@@ -126,6 +127,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		
     	timeofThisSync = tempArray.get(0);
     	
+    	deleteNotesFromServer(timeofThisSync,deleteData,idMapMatrix);
     	long timeOfLastSync = getLastSyncTime();
     	
     	final List<TaskProxy> list = new ArrayList<TaskProxy>();		
@@ -197,6 +199,27 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
         updateEntitiesInGoogleAppEngine(updateList,idMapMatrix,rdArray);
         
         // Make the jsonString to be sent to the OI Notes
+        
+        // make jsonArray for the notes that are going to be deleted
+        // take the notes form <list> which have TAG 'D'
+        if(il==0) { 
+			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
+			} 
+		
+		else {
+			for(TaskProxy task:list) {
+				if (debug) Log.i(TAG,"tag for del:-> "+task.getTag());
+				if( task.getTag()=='D') {
+					if (debug) Log.d(TAG,"going to del "+task.getId());
+				}
+			}
+		}
+        
+        
+        // add those notes to delete jsonArray
+        // Remove those notes from the <list>
+        
+        
         // If it is new then -1 is returned else their original id is returned inside jsonData
         if(il==0) { 
 			if (debug) Log.d(TAG, "size of taskList returned from server is 0");
@@ -239,7 +262,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		Uri insTime = activity.getContentResolver().insert(timeUri, timeValue);
 		if (debug) Log.d(TAG, "Inserted time uri is "+insTime.toString());
 		return jsonDataRet;	
-			
+		
         
 		//---------------------------------------------------------------------------------------------
         //
@@ -307,6 +330,59 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		});
     	*/
     	
+	}
+
+	private void deleteNotesFromServer(long timeofThisSync2, String deleteData, long[][] idMapMatrix) {
+//		//convert deleteData into long array of local ids.
+//		long[] delIds = getDelIds(deleteData);
+//		
+//		//get Google ids from IdMapMatrix.
+//		List<Long> delGoogleIds = getGoogleIds(delIds,idMapMatrix); 
+//		
+//		// fetch back all the notes with these delGoogleIds
+//		final List<TaskProxy> list = new ArrayList<TaskProxy>();		
+//		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
+//		CloudSyncRequest request1 = factory.taskRequest();
+//		   delGoogleIds.add(Long.valueOf(6));
+//		request1.queryGoogleIdList(activity.getCallingPackage(),delGoogleIds).fire(new Receiver<List<TaskProxy>>() {
+//
+//			@Override
+//			public void onSuccess(List<TaskProxy> arg0) {
+//				
+//				
+//				
+//				
+//				list.addAll(arg0);
+//				if (debug) Log.d(TAG, "[Getting del Ids] Size of list to be deleted returned from Engine: "+list.size());
+//				
+//			} 
+//			
+//			
+//		});
+//		
+		// Show the list to the user to show if they want to delete the data
+		
+		
+		
+		
+		// Add the tag 'D' to the fectched back notes from the server.
+		   // Remember a new Request has to be made for update. Check update method
+		
+		
+		
+		// Done! The Notes are deleted from the server.
+	}
+
+	private List<Long> getGoogleIds(long[] delIds, long[][] idMapMatrix) {
+		// TODO Auto-generated method stub
+		// Maps the local delIds to google ids and returns an array of google ids
+		return null;
+	}
+
+	private long[] getDelIds(String deleteData) {
+		// TODO Auto-generated method stub
+		//this method takes the json String and converts into long array of local ids.
+		return null;
 	}
 
 	private String fetchData(long[][] idMapMatrix) {

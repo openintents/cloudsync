@@ -377,12 +377,14 @@ public class CloudSyncActivity extends Activity {
     	if (debug) Log.d(TAG,"intent notesyndemo"+getIntent().describeContents()+"and action is:"+getIntent().getAction());
     	
     	String jsonData = "";
+    	String deleteData = "";
     	if(getIntent().getAction().equalsIgnoreCase("vincent.start")) {
     		// Get the client data 
     		jsonData = extras.getString("data");
+    		deleteData = extras.getString("delete");
     		AsyncTaskList atl = new AsyncTaskList(this);  
         	
-            atl.execute(jsonData);
+            atl.execute(jsonData,deleteData);
     	}
     	else {
     		
