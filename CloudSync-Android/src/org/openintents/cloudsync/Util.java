@@ -33,6 +33,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -116,7 +117,7 @@ public class Util {
 
         Notification notification = new Notification(icon, message, when);
         notification.setLatestEventInfo(context, "C2DM Example", message,
-                PendingIntent.getActivity(context, 0, null, PendingIntent.FLAG_CANCEL_CURRENT));
+                PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT));
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
         SharedPreferences settings = Util.getSharedPreferences(context);
