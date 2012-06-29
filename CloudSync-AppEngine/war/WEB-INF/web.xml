@@ -19,6 +19,31 @@
                         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     version="2.5">
 
+    <init-param>
+      <!-- speed up initial Jersey loading by deactivating WADL -->
+      <param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+      <param-value>true</param-value>
+  </init-param>
+    
+  <servlet>
+      <servlet-name>rest</servlet-name>
+      <servlet-class>
+        com.sun.jersey.spi.container.servlet.ServletContainer
+      </servlet-class>
+      <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <!-- Enter your Jersey resources to speed up initial Jersey loading -->
+          <!-- You can separate the java packages using , -->
+          <param-value>org.openintents.cloudsync.rest</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+  <servlet-mapping>
+     <servlet-name>rest</servlet-name>
+     <url-pattern>/*</url-pattern>
+  </servlet-mapping> 
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>CloudSync.html</welcome-file>

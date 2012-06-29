@@ -310,6 +310,7 @@ public class CloudSyncActivity extends Activity {
     	if (debug) Log.d(TAG,"intent notesyndemo"+getIntent().describeContents()+"and action is:"+getIntent().getAction());
     	
     	String jsonData = "";
+    	
     	if(getIntent().getAction().equalsIgnoreCase("vincent.start")) {
     		// Get the client data 
     		jsonData = extras.getString("data");
