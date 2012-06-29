@@ -44,6 +44,7 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 		jsonBuilder = new StringBuilder();
 		String jsonData = params[0];
 		String deleteData = params[1];
+		if (debug) Log.d(TAG,"deletdata:-> "+deleteData);
 		Uri idmapUri = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
 		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  activity.getCallingPackage() }, null);
 		long[][] idMapMatrix = null;
@@ -333,33 +334,33 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 	}
 
 	private void deleteNotesFromServer(long timeofThisSync2, String deleteData, long[][] idMapMatrix) {
-//		//convert deleteData into long array of local ids.
-//		long[] delIds = getDelIds(deleteData);
-//		
-//		//get Google ids from IdMapMatrix.
-//		List<Long> delGoogleIds = getGoogleIds(delIds,idMapMatrix); 
-//		
-//		// fetch back all the notes with these delGoogleIds
-//		final List<TaskProxy> list = new ArrayList<TaskProxy>();		
-//		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
-//		CloudSyncRequest request1 = factory.taskRequest();
-//		   delGoogleIds.add(Long.valueOf(6));
-//		request1.queryGoogleIdList(activity.getCallingPackage(),delGoogleIds).fire(new Receiver<List<TaskProxy>>() {
-//
-//			@Override
-//			public void onSuccess(List<TaskProxy> arg0) {
-//				
-//				
-//				
-//				
-//				list.addAll(arg0);
-//				if (debug) Log.d(TAG, "[Getting del Ids] Size of list to be deleted returned from Engine: "+list.size());
-//				
-//			} 
-//			
-//			
-//		});
-//		
+		//convert deleteData into long array of local ids.
+		long[] delIds = getDelIds(deleteData);
+		
+		//get Google ids from IdMapMatrix.
+		List<Long> delGoogleIds = getGoogleIds(delIds,idMapMatrix); 
+		
+		// fetch back all the notes with these delGoogleIds
+		final List<TaskProxy> list = new ArrayList<TaskProxy>();		
+		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
+		CloudSyncRequest request1 = factory.taskRequest();
+		   delGoogleIds.add(Long.valueOf(6));
+		request1.queryGoogleIdList(activity.getCallingPackage(),delGoogleIds).fire(new Receiver<List<TaskProxy>>() {
+
+			@Override
+			public void onSuccess(List<TaskProxy> arg0) {
+				
+				
+				
+				
+				list.addAll(arg0);
+				if (debug) Log.d(TAG, "[Getting del Ids] Size of list to be deleted returned from Engine: "+list.size());
+				
+			} 
+			
+			
+		});
+		
 		// Show the list to the user to show if they want to delete the data
 		
 		
@@ -382,6 +383,23 @@ public class AsyncTaskList extends AsyncTask<String, Void, String > {
 	private long[] getDelIds(String deleteData) {
 		// TODO Auto-generated method stub
 		//this method takes the json String and converts into long array of local ids.
+		try {
+			JSONObject jobj = new JSONObject(deleteData);
+			JSONArray jarr = jobj.getJSONArray("data");
+			if (debug) Log.i(TAG,"length of del array:-> "+jarr.length());
+			long[] delIdArray  = new long[jarr.length()];
+			for (int i = 0; i < jarr.length(); i++) {
+				JSONObject jloop = jarr.getJSONObject(i);
+				long localId = jloop.getLong("id");
+				if (debug) Log.i(TAG,"localid is :-> "+localId);
+				delIdArray[i] = localId;
+			}
+		} catch (JSONException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 

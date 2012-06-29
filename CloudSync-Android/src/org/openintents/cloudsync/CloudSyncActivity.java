@@ -235,6 +235,9 @@ public class CloudSyncActivity extends Activity {
         	cloudMod.moveToNext();
         }
         
+        timeCur.close();
+        idmapCur.close();
+        cloudMod.close();
         
         //deleteAll.setVisibility(Button.INVISIBLE);
         deleteAll.setOnClickListener(new OnClickListener() {
@@ -382,6 +385,7 @@ public class CloudSyncActivity extends Activity {
     		// Get the client data 
     		jsonData = extras.getString("data");
     		deleteData = extras.getString("delete");
+    		if (debug) Log.d(TAG,"delteDta in Acitivity:-> "+deleteData);
     		AsyncTaskList atl = new AsyncTaskList(this);  
         	
             atl.execute(jsonData,deleteData);
