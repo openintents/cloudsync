@@ -1,0 +1,81 @@
+diff -ur /home/bhaskar/www/webinterface/WebInterface/index.html WebInterface/index.html
+--- /home/bhaskar/www/webinterface/WebInterface/index.html	2012-06-20 23:45:03.421414590 +0530
++++ WebInterface/index.html	2012-06-21 01:21:04.049794141 +0530
+@@ -31,9 +31,9 @@
+ 							<ul class="dropdown-menu">
+ 								<li><a id="menuToggleSidebar" href="#">Toggle Sidebar</a></li>
+ 								<li><a id="showSettings" href="#">Settings</a></li>
+-								<li><a href="#">Help</a></li>
+-								<li><a href="#">About</a></li>
+-								<li><a href="#" id="menuLogout">Logout</a></li>
++								<!--<li><a href="#">Help</a></li>
++								<li><a href="#">About</a></li>-->
++								<!--<li><a href="#" id="menuLogout">Logout</a></li>-->
+ 							</ul>
+ 						</div>
+ 						<div id="menu-mobile" class="hidden-desktop">
+@@ -44,10 +44,10 @@
+ 							</a>
+ 							<div class="nav-collapse">
+ 								<ul>
+-									<li><a id="menuToggleSidebarMobile" class="hidden-phone" href="#">Toggle Sidebar</a></li>
++									<li class="hidden-phone"><a id="menuToggleSidebarMobile" href="#">Toggle Sidebar</a></li>
+ 									<li><a id="showSettingsMobile" href="#">Settings</a></li>
+-									<li><a href="#">Help</a></li>
+-									<li><a href="#">About</a></li>
++									<!--<li><a href="#">Help</a></li>
++									<li><a href="#">About</a></li>-->
+ 								</ul>
+ 							</div>
+ 						</div>
+@@ -73,7 +73,7 @@
+ 						<h3>OI Web Client</h3>
+ 					</div>
+ 					<div class="modal-body well form-horizontal">
+-						<label><input type="checkbox" id="settingShowSidebar" name="showSidebar"/>&nbsp;Show sidebar</label>
++						<label class="hidden-phone"><input type="checkbox" id="settingShowSidebar" name="showSidebar"/>&nbsp;Show sidebar</label>
+ 						<label>Select theme:&nbsp;
+ 						<select id="settingThemeSelect">
+ 							<option value="default">Default</option>
+@@ -85,7 +85,7 @@
+ 						<label><input id="settingShowShoppingList" type="checkbox"/>&nbsp;OI Shopping List</input></label>
+ 					</div>
+ 					<div class="modal-footer">
+-						<button id="settingsClose" class="btn" data-dismiss="modal">Cancel</button>
++						<button id="settingsClose" class="btn" data-dismiss="modal">Close</button>
+ 						<button id="settingsSave" class="btn btn-primary">Save</button>
+ 					</div>
+ 				</div> <!-- #settings -->
+diff -ur /home/bhaskar/www/webinterface/WebInterface/js/scripts.js WebInterface/js/scripts.js
+--- /home/bhaskar/www/webinterface/WebInterface/js/scripts.js	2012-06-20 23:50:06.845227560 +0530
++++ WebInterface/js/scripts.js	2012-06-21 01:13:37.535923728 +0530
+@@ -149,7 +149,7 @@
+ 		$('#note-edit-'+id).show('slideDown');
+ 		
+ 		$('#note-edit-'+id+' .button-save').click(function() {
+-			notify('Saving note....', 'alert-info');
++			//notify('Saving note....', 'alert-info');
+ 			updateNote(id);
+ 		});
+ 		
+@@ -227,7 +227,7 @@
+ 		if(!$('#form-note-add').valid()) {
+ 			return;
+ 		}
+-		notify('Saving note....', 'alert-info');
++		//notify('Saving note....', 'alert-info');
+ 		addNewNote('#form-note-add');
+ 		$('#add-note-modal').modal('hide');
+ 	});
+diff -ur /home/bhaskar/www/webinterface/WebInterface/login.html WebInterface/login.html
+--- /home/bhaskar/www/webinterface/WebInterface/login.html	2012-06-20 23:27:18.567714771 +0530
++++ WebInterface/login.html	2012-06-21 01:02:07.656819688 +0530
+@@ -33,7 +33,7 @@
+ 						<input type="password" maxlen="30" name="password" class="input-xlarge"/>
+ 						
+ 						<div class="form-actions">
+-							<input type="button" name="submit" class="btn btn-primary" value="Login"/>
++							<input type="submit" name="submit" class="btn btn-primary" value="Login"/>
+ 						</div>
+ 					</div>
+ 					</fieldset>

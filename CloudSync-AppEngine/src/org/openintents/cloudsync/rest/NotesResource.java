@@ -2,17 +2,19 @@ package org.openintents.cloudsync.rest;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.openintents.cloudsync.server.DataStore;
 import org.openintents.cloudsync.server.Task;
 
-import com.sun.jersey.api.Responses;
 import com.sun.jersey.api.NotFoundException;
 
 @Path("/notes")
@@ -61,14 +63,31 @@ public class NotesResource {
 					task.getId());
 		}
 	}
-
-	@POST @Path("/update")
+	
+	@POST 
+	@Path("/update")
 	@Produces("application/json")
-	public String update(@DefaultValue("-1") @QueryParam("_id") int id)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String update(@DefaultValue("") @FormParam("_id") String _id, 
+			@DefaultValue("") @FormParam("title") String title,
+			@DefaultValue("") @FormParam("note") String note)
 	{
-		if(id == -1)
-			throw new BadRequestException("Bad Request");
-		else
-			return "Updating";
+		
+		if(_id.isEmpty()) {
+			//throw new BadRequestException("Bad Request");
+			//System.out.println("Bad Request");
+			throw new NotFoundException();
+		}
+		
+		long id = Long.parseLong(_id);
+		DataStore ds = new DataStore();
+		
+		Task task = ds.find(id);
+		String t = Util.appendJSON(task.getJsonStringData(), "title", title);
+		t = Util.appendJSON(t, "note", note);
+		task.setJsonStringData(t);
+		ds.update(task);
+		
+		return t;
 	}
 }

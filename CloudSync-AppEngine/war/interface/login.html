@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>OI Web Client Login</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<link rel="stylesheet" media="all" href="css/bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" media="all" href="css/bootstrap/css/bootstrap-responsive.min.css"/>
+		<link rel="stylesheet" href="css/style.css" media="screen"/>
+		<link rel="stylesheet" href="css/theme.css" media="screen"/>
+		<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+		<script src="js/sha256.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			<!--
+				SALT = "$SALT$";
+				$(document).ready(function() {
+				        $('#loginForm').submit(function(event) {
+					      password = $('input[name=password]').val();
+					      if(!password) {
+						alert('Please enter a password');
+						return false;
+				      		}
+					      else {
+						password = CryptoJS.SHA256(password).toString();
+						password = password.concat(SALT)
+						$('input[name=password]').val(password);
+						}
+					      return true;
+   					 });
+				});
+			-->
+		</script>
+	</head>
+<body>
+	<header id="header" class="navbar top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<div id="logo" class="left">
+					<h2 class="big">OI Web Client</h2>
+				</div> <!-- #logo -->
+				<div class="clear"></div>
+			</div> <!-- .container-fluid -->
+		</div> <!-- .navbar-inner -->				
+	</header>
+		
+	<div class="container-fluid" style="margin: 6% 35%">
+		<div id="main-content" class="row well">
+			<div class="span-12">
+				<h3 style="border-bottom: 1px solid #222222; padding: 0 0 10px;margin-bottom: 1em;">Login</h3>
+				<form class="form-vertical" id="loginForm" method="post" action="/login">
+					<fieldset>
+					<div class="control-group">
+						<label for="password" class="control-label">Password</label>
+						<input type="password" name="password" class="input-xlarge"/>
+						
+						<div class="form-actions">
+							<input type="submit" name="submit" class="btn btn-primary" value="Login"/>
+						</div>
+					</div>
+					</fieldset>
+				</form>
+			
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

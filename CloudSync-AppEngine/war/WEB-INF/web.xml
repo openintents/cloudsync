@@ -86,7 +86,7 @@
   <!--  Require user login for the .html welcome page -->
   <security-constraint>
     <web-resource-collection>
-      <url-pattern>/CloudSync.html</url-pattern>
+      <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>*</role-name>

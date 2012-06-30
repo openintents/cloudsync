@@ -14,4 +14,15 @@ public class Util {
 		
 		return object.toString();
 	}
+	
+	public static String appendJSON(String jsonString, String name, String data)
+	{
+		JsonParser parser = new JsonParser();
+		
+		JsonObject object = parser.parse(jsonString).getAsJsonObject();
+		
+		object.addProperty(name, data);
+		
+		return object.toString();
+	}
 }
