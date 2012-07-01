@@ -41,7 +41,11 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	private static long timeofThisWrite; // This is to record the write to server.
 	private static StringBuilder jsonBuilder = new StringBuilder();
 	private static StringBuilder jsonDeleteBuilder = new StringBuilder();
-	
+
+	public AsyncSync(CloudSyncActivity cloudSyncActivity) {
+		this.activity = cloudSyncActivity;
+	}
+
 
 	@Override
 	protected String[] doInBackground(String[]... params) {
@@ -555,5 +559,15 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		return idMapMatrix;
 		
 	}
+	
+
+	@Override
+	protected void onPostExecute(String[] result) {
+		
+		activity.doneSyncing();
+		activity.sendResult(result);
+		super.onPostExecute(result);
+	}
+
 	
 }

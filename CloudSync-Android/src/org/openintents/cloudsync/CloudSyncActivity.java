@@ -386,9 +386,11 @@ public class CloudSyncActivity extends Activity {
     		jsonData = extras.getString("data");
     		deleteData = extras.getString("delete");
     		if (debug) Log.d(TAG,"delteDta in Acitivity:-> "+deleteData);
-    		AsyncTaskList atl = new AsyncTaskList(this);  
-        	
-            atl.execute(jsonData,deleteData);
+    		//AsyncTaskList atl = new AsyncTaskList(this);  
+    		//atl.execute(jsonData,deleteData);
+        	AsyncSync as = new AsyncSync(this);
+        	as.execute(new String[]{jsonData,deleteData});
+            
     	}
     	else {
     		
@@ -404,10 +406,11 @@ public class CloudSyncActivity extends Activity {
     	syncButton.setClickable(true);
 	}
 
-	public void sendResult(String result) {
+	public void sendResult(String[] result) {
 		
 		Intent i = new Intent();
-		i.putExtra("jsonData", result);
+		i.putExtra("jsonData", result[0]);
+		i.putExtra("delete", result[1]);
 		setResult(0,i);
 		finish();
 	}
