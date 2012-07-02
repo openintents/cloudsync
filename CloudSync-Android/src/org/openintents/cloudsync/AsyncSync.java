@@ -64,7 +64,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		rdArray =  getRecievedArray(jsonData); // Will contain received localIds and Json Data from Client
 		
 		    // These are long values of the local ids that are going to be inserted or deleted.From rdArray
-		LinkedList<Long> updateList =  getUdapteList();
+		LinkedList<Long> updateList =  getUpdateList();
 		LinkedList<Long> insertList = getInsertList();
 		LinkedList<Long> deleteList = getDeleteList(deleteData); // This contains local ids to be deleted
 		
@@ -84,7 +84,8 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		//------------------------------------------------------------------------------------
 		// If rdArray is empty then just makeJsonArrayForClient. Coz nothing to work on Sever from here
 		//------------------------------------------------------------------------------------
-		if(rdArray.length == 0) {
+		if(rdArray.length == 0 & deleteList.size()==0) {
+			if (debug) Log.d(TAG,"nothing from client :-> "+deleteList.size()+" "+rdArray.length);
 			updateTimeTable();
 			return makeJsonArraysForClient();
 		}
@@ -194,7 +195,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 						list.addAll(arg0);
 						if (debug)
 							Log.d(TAG,
-									"[updateEntitiesInGoogleAppEngine] Size of list to be modified returned from Engine: "
+									"Delete Size of list to be deleted from Engine: "
 											+ list.size());
 
 					}
@@ -402,8 +403,10 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			return 0;
 		}
 		timeTableCursor.moveToLast(); //  check whether it returns the highest value checked
-		if (debug) Log.d(TAG, "the lastSync time is: "+timeTableCursor.getLong(1));
-		return timeTableCursor.getLong(1);
+		long lastSyncTime = timeTableCursor.getLong(1);
+		if (debug) Log.d(TAG, "the lastSync time is: "+lastSyncTime);
+		timeTableCursor.close();
+		return lastSyncTime;
 			
 	}
 
@@ -437,6 +440,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			public void onSuccess(Long time) {
 				if (debug) Log.d(TAG, "long time of this sync:_> "+time.toString());
 				tempArray.add(time);
+				if (debug) Log.d(TAG,"time from server:-> "+time.toString());
 				// new calendar inside the appEngine doesnot work
 				// use new Date() or System.getmilliseconds
 				//if (debug) Log.d(TAG, "time of this sync: "+tempArray.get(0));
@@ -463,7 +467,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			for(int j=0;j<idMapMatrix.length;j++) {
 				if(rdArray[i].getLocal_id() == idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]) {
 					flag = true;
-					updateList.add(rdArray[i].getLocal_id());
+					//updateList.add(rdArray[i].getLocal_id());
 					if (debug) Log.d(TAG, "updating the list updateList with id: "+rdArray[i].getLocal_id());
 					break;
 				}
@@ -477,14 +481,15 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	}
 
 
-	private LinkedList<Long> getUdapteList() {
+	private LinkedList<Long> getUpdateList() {
 		LinkedList<Long> updateList =  new LinkedList<Long>();
 		LinkedList<Long> insertList = new LinkedList<Long>();
 		boolean flag = false;
+		if (debug) Log.d(TAG,"message:-> "+rdArray.toString());
 		for(int i =0;i<rdArray.length;i++) {
 			flag = false;
 			for(int j=0;j<idMapMatrix.length;j++) {
-				if (debug) Log.d(TAG, "the rdArray elem and idmapmatrix elem: "+rdArray[i].getLocal_id()+" : "+idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]);
+				
 				if(rdArray[i].getLocal_id() == idMapMatrix[j][ID_MAP_MATRIX_LOCAL_ID]) {
 					flag = true;
 					
@@ -496,9 +501,10 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			
 			if(!flag) {
 				insertList.add(rdArray[i].getLocal_id());
-				if (debug) Log.d(TAG, "inserting the list rdArray with id: "+rdArray[i].getLocal_id());
+				//if (debug) Log.d(TAG, "inserting the list rdArray with id: "+rdArray[i].getLocal_id());
 			}
 		}
+		
 		
 		return updateList;
 	}
@@ -517,7 +523,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			JSONObject jdataobj = new JSONObject(jsonData);
 			JSONArray jsonArray = jdataobj.getJSONArray("data");
 			rdArray = new RecievedData[jsonArray.length()];
-			if (debug) Log.d(TAG, "length of rdArray and JsonArray: "+rdArray.length+" "+jsonArray.length());
+			if (debug) Log.d(TAG, "length of rdArray and JsonArray: "+rdArray.length+" : "+jsonArray.length());
 			for(int i=0;i<jsonArray.length();i++) {
 				JSONObject jobj = jsonArray.getJSONObject(i);
 				int localid = jobj.getInt("id");
@@ -553,9 +559,10 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 			idMapMatrix[i][ID_MAP_MATRIX_LOCAL_ID] = Long.valueOf(idMapCursor.getString(1));
 			idMapMatrix[i][ID_MAP_MATRIX_GOOGLE_ID] = Long.valueOf(idMapCursor.getString(2));
 			idMapCursor.moveToNext();
-			if (debug) Log.d(TAG, ""+idMapMatrix[i][0]+" "+idMapMatrix[i][1]);
+			if (debug) Log.d(TAG, "idmap local n google"+idMapMatrix[i][0]+" "+idMapMatrix[i][1]);
 		}
 		if (debug) Log.d(TAG, "length of the idmapmatrix is "+idMapMatrix.length);
+		idMapCursor.close();
 		return idMapMatrix;
 		
 	}
