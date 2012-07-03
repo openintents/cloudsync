@@ -299,6 +299,7 @@ public class CloudSyncActivity extends Activity {
         syncButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	helloWorld.setText("Syncing Process Started");
+            	
             	startSync();
             }
 			       
@@ -378,11 +379,14 @@ public class CloudSyncActivity extends Activity {
     	
     	Bundle extras = getIntent().getExtras();
     	if (debug) Log.d(TAG,"intent notesyndemo"+getIntent().describeContents()+"and action is:"+getIntent().getAction());
+    	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
     	
     	String jsonData = "";
     	String deleteData = "";
     	if(getIntent().getAction().equalsIgnoreCase("vincent.start")) {
     		// Get the client data 
+    		final Button syncButton = (Button) findViewById(R.id.sync_test);
+    		syncButton.setEnabled(false);
     		jsonData = extras.getString("data");
     		deleteData = extras.getString("delete");
     		if (debug) Log.d(TAG,"delteDta in Acitivity:-> "+deleteData);
@@ -393,7 +397,7 @@ public class CloudSyncActivity extends Activity {
             
     	}
     	else {
-    		
+    		helloWorld.setText(" Call me from OI Note");
     	}
     	
 		
@@ -402,6 +406,7 @@ public class CloudSyncActivity extends Activity {
     void doneSyncing() {
     	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
     	final Button syncButton = (Button) findViewById(R.id.sync_test);
+    	syncButton.setEnabled(true);
     	helloWorld.setText("Finished!");
     	syncButton.setClickable(true);
 	}

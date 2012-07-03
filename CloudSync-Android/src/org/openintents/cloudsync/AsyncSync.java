@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import org.openintents.cloudsync.util.RecievedData;
 import org.openintents.cloudsync.util.SyncUtil;
+import org.openintents.cloudsync.util.Ulg;
 
 public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	
@@ -49,6 +50,8 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 
 	@Override
 	protected String[] doInBackground(String[]... params) {
+		Ulg.d("--------------------");
+		Ulg.d("--------------------");
 		jsonBuilder = new StringBuilder();
 		jsonDeleteBuilder = new StringBuilder();
 		
@@ -58,6 +61,9 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		String[] paramInput = params[0];
 		String jsonData = paramInput[0];
 		String deleteData = paramInput[1]; 
+		Ulg.d("vincent", "inside the asyncsync");
+		Ulg.d("vincent", "the json data is:-> "+jsonData);
+		Ulg.d("vincent", "the delete data is:-> "+deleteData );
 		
 		    //idMapMatrix is a table which has local ids and GoogleIds and packageName
 		idMapMatrix =  getIdMapMatrix();
@@ -68,6 +74,9 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		LinkedList<Long> insertList = getInsertList();
 		LinkedList<Long> deleteList = getDeleteList(deleteData); // This contains local ids to be deleted
 		
+		for (int i = 0; i < deleteList.size(); i++) {
+			Ulg.d("[asyncsync] Delete list: "+deleteList.get(i));
+		}
 		    // Time of last sync is taken from table TimeTable. Its the value of previous sync
 		long timeOfLastSync = getLastSyncTime();
 		
@@ -137,7 +146,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				long gId = task.getId();
 				long localId = SyncUtil.mapTheMatrix(idMapMatrix, idMapMatrix.length, gId, ID_MAP_MATRIX_GOOGLE_ID, ID_MAP_MATRIX_LOCAL_ID);//getLocalIdFromMapMatrix(gId, idMapMatrix);
 				String jsonString = task.getJsonStringData();
-				if(task.getTag()=='D') {
+				if(task.getTag()=='D' & localId > -1) {
 					jsonDeleteBuilder = SyncUtil.addToJson(jsonDeleteBuilder, localId, gId, jsonString);
 				} else {
 					jsonBuilder = SyncUtil.addToJson(jsonBuilder,localId,gId,jsonString);
@@ -162,6 +171,9 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		if (debug) Log.d(TAG, jsonDataRet);
 		if (debug) Log.d(TAG, jsonDeleteDataRet);
 		
+		Ulg.d("vincent", "the data to be returned is");
+		Ulg.d("vincent", "jsondata is:-> "+jsonDataRet);
+		Ulg.d("vincent", "delete for the client is:-> "+jsonDeleteDataRet);
 		return new String[]{jsonDataRet, jsonDeleteDataRet};
 		
 	}
@@ -203,7 +215,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				});
 
 		int il = list.size();
-		
+		Ulg.d("[asyncsync] Size of list to be del tagged: "+il);
 		// the above returned beans are frozen
 		// check the blog
 		// http://fascynacja.wordpress.com/tag/autobean-has-been-frozen/
@@ -571,6 +583,8 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	@Override
 	protected void onPostExecute(String[] result) {
 		
+		Ulg.d("[asyncsync] onPostExec json: "+result[0]);
+		Ulg.d("[asyncsync] onPostExec delete: "+result[1]);
 		activity.doneSyncing();
 		activity.sendResult(result);
 		super.onPostExecute(result);
