@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>OpenIntents Web Client</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<link rel="stylesheet" media="all" href="themes/default/bootstrap.min.css" data-theme="bootstrap"/>
+		<link rel="stylesheet" media="all" href="css/bootstrap-responsive.min.css"/>
+		<link rel="stylesheet" href="css/style.css" media="screen"/>
+		<link rel="stylesheet" href="css/ui-progress-bar.css" media="screen"/>
+		<link rel="stylesheet" href="themes/default/theme.css" media="screen" data-theme="theme"/>
+	</head>
+	
+	<body>
+		<div class="lightbox_bg" style="display:block"></div>
+		<div class="modal_load">
+			<p>Please wait....</p>
+			<div class="ui-progress-bar ui-container transition blue">
+				<div class="ui-progress" style="width:100%"></div>
+			</div>
+		</div>
+		<header id="header" class="navbar top">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<div id="logo" class="left">
+							<h2 class="big">OI Web Client</h2>
+						</div> <!-- #logo -->
+						<div id="menu" class="pull-right dropdown visible-desktop">
+							<a href="#" id="actionButton" class="dropdown-toggle" data-toggle="dropdown">
+								<img src="images/ics-actionbar-icon.png"/>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a id="menuToggleSidebar" href="#">Toggle Sidebar</a></li>
+								<li><a id="showSettings" href="#">Settings</a></li>
+								<li><a href="#">Help</a></li>
+								<li><a href="#">About</a></li>
+							</ul>
+						</div>
+						<div id="menu-mobile" class="hidden-desktop">
+							<a href="#" id="actionButton" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</a>
+							<div class="nav-collapse">
+								<ul>
+									<li><a id="menuToggleSidebarMobile" class="hidden-phone" href="#">Toggle Sidebar</a></li>
+									<li><a id="showSettingsMobile" href="#">Settings</a></li>
+									<li><a href="#">Help</a></li>
+									<li><a href="#">About</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div> <!-- .container-fluid -->
+				</div> <!-- .navbar-inner -->				
+		</header>
+		
+		<div id="wrap-content" class="container-fluid">
+			<div id="main-content" class="row-fluid">
+			<div id="nav" class="span3 sidebar ui-layout-west hidden-phone">
+				<ul class="nav nav-list">
+					<li><a href="#_" id="nav-home" data-switch="home"><img src="images/home.png"/>Home</a></li>
+					<li><a href="#_" id="nav-notepad" data-switch="notepad"><img src="images/oi-notepad.png"/>OI Notepad</a></li>
+					<li><a href="#" id="nav-shoppinglist" data-switch="shoppinglist"><img src="images/oi-shoppinglist.png"/>OI Shopping List</a></li>
+				</ul>
+			</div> <!-- #nav -->
+			<div id="content" class="span8 ui-layout-center" data-span-max="span11" data-span-min="span8" data-margin-min="0 0 0 25%" data-margin-max="0 4%">
+				<!-- Settings -->
+				<div id="settings" class="hide">
+					<div class="modal-header">
+						<button class="close" data-dismiss="modal">&times;</button>
+						<h3>OI Web Client</h3>
+					</div>
+					<div class="modal-body well form-horizontal">
+						<label><input type="checkbox" id="settingShowSidebar" name="showSidebar"/>&nbsp;Show sidebar</label>
+						<label>Select theme:&nbsp;
+						<select id="settingThemeSelect">
+							<option>Default</option>
+							<option>Clean</option>
+							<option>Red</option>
+							<option>Blue</option>
+						</select>
+						</label>
+						Show applications:
+						<label><input id="settingShowNotepad" type="checkbox"/>&nbsp;OI Notepad</input></label>
+						<label><input id="settingShowShoppingList" type="checkbox"/>&nbsp;OI Shopping List</input></label>
+					</div>
+					<div class="modal-footer">
+						<button id="settingsClose" class="btn" data-dismiss="modal">Cancel</button>
+						<button id="settingsSave" class="btn btn-primary">Save</button>
+					</div>
+				</div> <!-- #settings -->
+				<div id="content-home">
+					<h2>Welcome to OI Web Client!</h2>
+					<p>You can manage your OpenIntent applications right from your browser.</p>
+					<p>To get started just click on the application name on the bottom.</p>
+					<table id="table-launchers">
+						<tbody>
+							<tr>
+								<td><a href="#" data-switch="notepad"><img src="images/ic_launcher_notepad.png"/> OI Notepad</a></td>
+							</tr>
+							<tr>
+								<td><a href="#" data-switch="shoppinglist"><img src="images/ic_launcher_shoppinglist.png"/> OI Shopping List</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- #home -->
+				<div id="content-notepad">
+					<h3>OI Notepad notes</h3>
+					<div class="btn-group btn-toolbar">
+						<div class="visible-desktop hide" id="add-note-modal">
+							<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h3>Add New Note</h3>
+							</div>
+							<div class="modal-body well">
+								<form id="form-note-add">
+									<label of="title" class="control-label">Title</label>
+									<input type="text" name="title" class="input-xlarge"/>
+									<label of="note" class="control-label">Text</label>
+									<textarea name="note" class="input-xlarge"></textarea>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<a id="btn-note-close" href="#" class="btn" data-dismiss="modal">Close</a>
+								<a id="btn-note-add" href="#" class="btn btn-primary">Add</a>
+							</div>
+						</div>
+						
+						<button id="btn-new-note" class="button-note-add button-add btn">
+							<i class="icon-plus"></i>
+							New Note
+						</button>
+					
+					<div class="btn-group">
+						<button class="button-note-select button-select btn" data-toggle="dropdown">
+							Actions
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a id="notepad-action-toggle" href="#">Toggle Selection</a></li>
+							<li><a id="notepad-action-selectall" href="#">Select All</a></li>
+							<li><a id="notepad-action-deselectall" href="#">Deselect All</a></li>
+							<li><a id="notepad-action-deleteselected" href="#">Delete Selected</a></li>
+						</ul>
+					<!--<button class="button-note-delete button-delete btn"><i class="icon-remove"></i>Delete</button>-->
+					</div> <!-- .btn-group -->
+					<div id="add-note-phone" class="hide">
+						<div class="well">
+							<form id="form-note-add">
+								<label of="title" class="control-label">Title</label>
+								<input type="text" name="title" class="input-xlarge"/>
+								<label of="text" class="control-label">Text</label>
+								<textarea name="text" class="input-xlarge"></textarea>
+							</form>
+							<a id="btn-note-close-phone" href="#" class="btn push-left">Close</a>
+							<a id="btn-note-add" href="#" class="btn btn-primary push-left">Add</a>
+						</div>
+					</div>
+					</div>
+					<table class="table-list hide">
+						<thead>
+							<th>Title</th>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div> <!-- #content-notepad -->
+				<div id="content-shoppinglist">
+					<h3>OI Shopping List lists</h3>
+					
+					<select id="shoppinglist">
+						<option>Groceries</option>
+						<option>Medicine</option>
+						<option>Something</option>
+						<option>Something Else</option>
+					</select>
+				</div> <!-- #content-shoppinglist -->
+			</div> <!-- #content -->
+			<div class="clear push"></div>
+			</div> <!-- .row-fluid -->
+		</div> <!-- #wrap-content -->
+		<footer id="footer" class="ui-layout-south">
+			<p>&copy; OpenIntents 2012</p>
+		</footer>
+		<div id="notification-wrapper"></div>
+		
+		<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+		<script src="js/jquery.cookie.js" type="text/javascript"></script>
+		<script src="js/jquery.json-2.3.min.js" type="text/javascript"></script>
+		<script src="js/bootstrap-alert.js" type="text/javascript"></script>
+		<script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
+		<script src="js/bootstrap-modal.js" type="text/javascript"></script>
+		<script src="js/bootstrap-collapse.js" type="text/javascript"></script>
+		<script src="js/scripts.js" type="text/javascript"></script>
+		<script src="themes/default/scripts.js" type="text/javascript"></script>
+</body>
+</html>
+

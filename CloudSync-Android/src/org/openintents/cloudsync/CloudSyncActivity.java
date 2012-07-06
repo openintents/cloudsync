@@ -382,7 +382,9 @@ public class CloudSyncActivity extends Activity {
     	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
     	
     	String jsonData = "";
+
     	String deleteData = "";
+
     	if(getIntent().getAction().equalsIgnoreCase("vincent.start")) {
     		// Get the client data 
     		final Button syncButton = (Button) findViewById(R.id.sync_test);
