@@ -109,7 +109,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		    // Update Changed notes into Server
 		updateChangedNotes(updateList);
 		
-		    // Delete Notes from the server which has been Deleted on local client
+		    // Delete Notes on the server which has been Deleted on local client
 		deleteNotes(deleteList);
 		
 		//------------------------------------------------------------------------------------
@@ -148,7 +148,13 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				String jsonString = task.getJsonStringData();
 				if(task.getTag()=='D' & localId > -1) {
 					jsonDeleteBuilder = SyncUtil.addToJson(jsonDeleteBuilder, localId, gId, jsonString);
-				} else {
+				} else if (task.getTag()=='D' & localId == -1) {
+					// This note from server has tag 'D' but it not found on the local client.
+					// Do nothing.
+					continue;
+				} 
+				
+				else {
 					jsonBuilder = SyncUtil.addToJson(jsonBuilder,localId,gId,jsonString);
 				}
 				
