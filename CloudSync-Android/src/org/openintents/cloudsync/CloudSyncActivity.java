@@ -16,6 +16,7 @@ package org.openintents.cloudsync;
 
 import org.openintents.cloudsync.client.MyRequestFactory;
 import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
+import org.openintents.cloudsync.notepad.AsyncDetectChange;
 import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
 
 import android.app.Activity;
@@ -26,7 +27,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +40,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -300,7 +299,8 @@ public class CloudSyncActivity extends Activity {
             public void onClick(View v) {
             	helloWorld.setText("Syncing Process Started");
             	
-            	startSync();
+            	//startSync();
+            	startStandAloneSync();
             }
 			       
         });
@@ -375,6 +375,16 @@ public class CloudSyncActivity extends Activity {
         }
     }
     
+    void startStandAloneSync() {
+    	
+    	final Button syncButton = (Button) findViewById(R.id.sync_test);
+		syncButton.setEnabled(false);
+    	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    	helloWorld.setText("Fetching data from OI Note");
+    	AsyncDetectChange adc = new AsyncDetectChange(this);
+		adc.execute();
+    }
+    
     private void startSync() {
     	
     	Bundle extras = getIntent().getExtras();
@@ -405,13 +415,18 @@ public class CloudSyncActivity extends Activity {
 		
 	}
     
-    void doneSyncing() {
+    public void doneSyncing() {
     	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
     	final Button syncButton = (Button) findViewById(R.id.sync_test);
     	syncButton.setEnabled(true);
     	helloWorld.setText("Finished!");
     	syncButton.setClickable(true);
 	}
+    
+    public void displayText(String msg) {
+    	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    	helloWorld.setText(msg);
+    }
 
 	public void sendResult(String[] result) {
 		

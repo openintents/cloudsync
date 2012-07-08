@@ -7,21 +7,23 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openintents.cloudsync.notepad.AsyncApplyResult;
 import org.openintents.cloudsync.shared.CloudSyncRequest;
 import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
 import org.openintents.cloudsync.shared.TaskProxy;
-
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import org.openintents.cloudsync.util.NotepadSync;
+import org.openintents.cloudsync.util.RecievedData;
+import org.openintents.cloudsync.util.SyncUtil;
+import org.openintents.cloudsync.util.Ulg;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import org.openintents.cloudsync.util.RecievedData;
-import org.openintents.cloudsync.util.SyncUtil;
-import org.openintents.cloudsync.util.Ulg;
+
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	
@@ -125,7 +127,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		Uri timeUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
 		ContentValues timeValue = new ContentValues();
 		timeValue.put(TimeTable.TIMESTAMP, timeofThisSync);
-		timeValue.put(TimeTable.PACKAGE_NAME, activity.getCallingPackage());
+		timeValue.put(TimeTable.PACKAGE_NAME, NotepadSync.PACKAGE_NAME);
 		Uri insTime = activity.getContentResolver().insert(timeUri, timeValue);
 		if (debug) Log.d(TAG, "Inserted time uri is "+insTime.toString());
 		
@@ -204,7 +206,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				CloudSyncRequestFactory.class);
 		CloudSyncRequest request1 = factory.taskRequest();
 		
-		request1.queryGoogleIdList(activity.getCallingPackage(), gIdList).fire(
+		request1.queryGoogleIdList(NotepadSync.PACKAGE_NAME, gIdList).fire(
 				new Receiver<List<TaskProxy>>() {
 
 					@Override
@@ -235,7 +237,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 
 			task[i] = request.edit(list.get(i));
 			task[i].setTag('D');
-			task[i].setAppPackageName(activity.getCallingPackage());
+			task[i].setAppPackageName(NotepadSync.PACKAGE_NAME);
 			task[i].setTimestamp(timeofThisSync);
 			request.updateTask(task[i]);
 
@@ -265,7 +267,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 							+ gIdList.toString());
 		// if the list size of updateList is 0 there is nothing to be updated
 		// just return
-		request1.queryGoogleIdList(activity.getCallingPackage(), gIdList).fire(
+		request1.queryGoogleIdList(NotepadSync.PACKAGE_NAME, gIdList).fire(
 				new Receiver<List<TaskProxy>>() {
 
 					@Override
@@ -303,7 +305,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 						"[updateEntitiesInGoogleAppEngine] json data for Gid: "
 								+ gId + " ; " + jsonString);
 			task[i].setJsonStringData(jsonString);
-			task[i].setAppPackageName(activity.getCallingPackage());
+			task[i].setAppPackageName(NotepadSync.PACKAGE_NAME);
 			task[i].setTimestamp(timeofThisSync);
 			request.updateTask(task[i]);
 
@@ -340,7 +342,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				String tempJString = SyncUtil.getJsonFromRDarray(
 						insertList.get(i), rdArray);
 				task[i].setJsonStringData(tempJString);
-				task[i].setAppPackageName(activity.getCallingPackage());
+				task[i].setAppPackageName(NotepadSync.PACKAGE_NAME);
 				task[i].setTimestamp(timeofThisSync);
 				request.updateTask(task[i]);
 			}
@@ -357,7 +359,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 					"going to do the query of newly created tasks to update the idMapTable with exact time: "
 							+ timeofThisSync);
 		factory.taskRequest()
-				.queryExactTimeStamp(activity.getCallingPackage(),
+				.queryExactTimeStamp(NotepadSync.PACKAGE_NAME,
 						timeofThisSync).fire(new Receiver<List<TaskProxy>>() {
 					@Override
 					public void onSuccess(List<TaskProxy> arg0) {
@@ -385,7 +387,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				values.put(IdMapTable.COLUMN_APPENG_ID, googleId);
 				values.put(IdMapTable.COLUMN_LOCAL_ID, localId);
 				values.put(IdMapTable.PACKAGE_NAME,
-						activity.getCallingPackage());
+						NotepadSync.PACKAGE_NAME);
 				Uri insertedUri = activity.getContentResolver().insert(
 						idmapUri, values);
 				if (debug)
@@ -400,7 +402,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
     	final List<TaskProxy> list = new ArrayList<TaskProxy>();		
 		CloudSyncRequestFactory factory = Util.getRequestFactory(activity, CloudSyncRequestFactory.class);
 		if (debug) Log.d(TAG, "[main] going to do the query of tasks with package name param, and timestamp greate than: "+timeOfLastSync);
-		factory.taskRequest().queryTasks(activity.getCallingPackage(),timeOfLastSync).fire(new Receiver<List<TaskProxy>>() {
+		factory.taskRequest().queryTasks(NotepadSync.PACKAGE_NAME,timeOfLastSync).fire(new Receiver<List<TaskProxy>>() {
 
 			@Override
 			public void onSuccess(List<TaskProxy> arg0) {
@@ -415,7 +417,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	private long getLastSyncTime() {
 
 		Uri timeTableUri = Uri.parse(CloudSyncContentProvider.TIME_CONTENT_URI.toString());
-		Cursor timeTableCursor = activity.getContentResolver().query(timeTableUri, null, TimeTable.PACKAGE_NAME+"=?", new String[] {  activity.getCallingPackage() } , TimeTable.TIMESTAMP);
+		Cursor timeTableCursor = activity.getContentResolver().query(timeTableUri, null, TimeTable.PACKAGE_NAME+"=?", new String[] {  NotepadSync.PACKAGE_NAME } , TimeTable.TIMESTAMP);
 		
 		if(timeTableCursor.getCount() == 0) {
 			return 0;
@@ -568,7 +570,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 
 	private long[][] getIdMapMatrix() {
 		Uri idmapUri = Uri.parse(CloudSyncContentProvider.IDMAPS_CONTENT_URI.toString());
-		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  activity.getCallingPackage() }, null);
+		Cursor idMapCursor = activity.getContentResolver().query(idmapUri, null, IdMapTable.PACKAGE_NAME + "=?", new String[] {  NotepadSync.PACKAGE_NAME }, null);
 		long[][] idMapMatrix = null;
 		if (debug) Log.d(TAG,"Going to make an Id map matrix");
 		idMapMatrix = new long[idMapCursor.getCount()][2];
@@ -591,8 +593,17 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		
 		Ulg.d("[asyncsync] onPostExec json: "+result[0]);
 		Ulg.d("[asyncsync] onPostExec delete: "+result[1]);
+		
+		activity.displayText("Going to apply results back to OI Note");
+		String jsonData = result[0];
+		String deleteData = result[1];
+		
+		AsyncApplyResult aar = new AsyncApplyResult(activity);
+		aar.execute(new String[]{jsonData,deleteData});
+		/**
 		activity.doneSyncing();
 		activity.sendResult(result);
+		*/
 		super.onPostExecute(result);
 	}
 
