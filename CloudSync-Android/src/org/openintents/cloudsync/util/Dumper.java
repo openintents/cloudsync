@@ -3,6 +3,7 @@ package org.openintents.cloudsync.util;
 
 import org.openintents.cloudsync.notepad.AsyncDetectChange;
 import org.openintents.cloudsync.notepad.NotePad;
+import org.openintents.cloudsync.notepad.NotePad.Notes;
 import org.openintents.cloudsync.notepad.Ulg;
 
 import android.app.Activity;
@@ -22,8 +23,8 @@ public class Dumper {
 		
 		String[] PROJECTION = new String[] {
 		        NotePad.Notes._ID, // 0
-		        NotePad.Notes.CREATED_DATE,
-		        NotePad.Notes.MODIFIED_DATE,
+		        Notes.CREATED_DATE,
+		        Notes.MODIFIED_DATE,
 		    };
 		
 		activity.getContentResolver().delete(MOD_CONTENT_URI, null, null);
