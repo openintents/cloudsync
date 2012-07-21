@@ -108,6 +108,10 @@ public class Util {
      */
     private static final Map<Context, String> URL_MAP = new HashMap<Context, String>();
 
+	public static final String LAST_TIME = "lastTime";
+
+	public static final String IN_SYNC = "inSync";
+
     /**
      * Display a notification containing the given string.
      */
@@ -232,8 +236,8 @@ public class Util {
             }
         }
 
-        // return url; // for windows
-        return new String ("http://192.168.11.5:8888"); // for ubuntu
+        return url; // for windows
+        //return new String ("http://192.168.11.5:8888"); // for ubuntu
     }
 
     /**

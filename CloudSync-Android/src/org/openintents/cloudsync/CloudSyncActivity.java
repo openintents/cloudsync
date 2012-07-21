@@ -17,6 +17,7 @@ package org.openintents.cloudsync;
 import org.openintents.cloudsync.client.MyRequestFactory;
 import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
 import org.openintents.cloudsync.notepad.AsyncDetectChange;
+import org.openintents.cloudsync.notepad.NotePad;
 import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
 
 import android.app.Activity;
@@ -30,6 +31,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -104,6 +106,17 @@ public class CloudSyncActivity extends Activity {
 
         // Register a receiver to provide register/unregister notifications
         registerReceiver(mUpdateUIReceiver, new IntentFilter(Util.UPDATE_UI_INTENT));
+        Uri noteuri = NotePad.Notes.CONTENT_URI; //Uri.parse("content://org.openintents.notepad/notes");
+        Log.d("vincent", "inside the contentment");
+        Handler handler = new Handler();
+        MyContentObserver myContentObserver = new MyContentObserver(handler);
+        myContentObserver.setActivity(this);
+
+        this.getApplicationContext()
+        .getContentResolver()
+        .registerContentObserver(
+                noteuri, true,
+                myContentObserver);
     }
 
     @Override

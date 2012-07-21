@@ -4,11 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openintents.cloudsync.CloudSyncActivity;
+import org.openintents.cloudsync.Util;
 import org.openintents.cloudsync.notepad.NotePad.Notes;
 import org.openintents.cloudsync.util.Dumper;
 import org.openintents.cloudsync.util.NotepadSync;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -285,6 +287,10 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 		
 		Dumper.updateModTable(activity);
 		activity.doneSyncing();
+		
+		SharedPreferences prefs = Util.getSharedPreferences(activity);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean(Util.IN_SYNC, false);
 		super.onPostExecute(result);
 	}
 	
