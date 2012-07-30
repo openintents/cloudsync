@@ -14,10 +14,6 @@
  *******************************************************************************/
 package org.openintents.cloudsync;
 
-import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.google.web.bindery.requestfactory.shared.RequestFactory;
-import com.google.web.bindery.requestfactory.vm.RequestFactorySource;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,6 +25,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,7 +33,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.google.web.bindery.event.shared.SimpleEventBus;
+import com.google.web.bindery.requestfactory.shared.RequestFactory;
+import com.google.web.bindery.requestfactory.vm.RequestFactorySource;
 
 /**
  * Utility methods for getting the base URL for client-server communication and
@@ -245,5 +248,12 @@ public class Util {
      */
     private static String getPackageName() {
         return Util.class.getPackage().getName();
+    }
+    
+    public static boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager 
+              = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

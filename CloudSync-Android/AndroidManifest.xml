@@ -23,6 +23,10 @@
 
     <!-- Permission to request authtokens from the AccountManager -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    
+    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application android:icon="@drawable/app_icon"
         android:label="@string/app_name" android:debuggable="true">
@@ -65,6 +69,17 @@
                 <category android:name="org.openintents.cloudsync" />
             </intent-filter>
         </receiver>
+        
+        <receiver  android:process=":remote" android:name="Alarm"></receiver>
+        
+        <receiver android:name="org.openintents.cloudsync.syncadapter.StartupIntentReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+
     <!--    
         <provider
       android:name=".MyTimeContentProvider"

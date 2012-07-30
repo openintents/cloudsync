@@ -19,8 +19,11 @@ import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
 import org.openintents.cloudsync.notepad.AsyncDetectChange;
 import org.openintents.cloudsync.notepad.NotePad;
 import org.openintents.cloudsync.shared.CloudSyncRequestFactory;
+import org.openintents.cloudsync.syncadapter.Alarm;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -388,11 +391,26 @@ public class CloudSyncActivity extends Activity {
         }
     }
     
-    void startStandAloneSync() {
+    public void startStandAloneSync() {
     	
+    	// TODO: First check if the network is available if yes then kewl
+    	// else just
+    	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    	
+    	AlarmManager am=(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+   	    Intent i = new Intent(this, Alarm.class);
+   	    am.cancel(PendingIntent.getBroadcast(this, 0, i, 0));
+   	    
+    	if(!Util.isNetworkAvailable(this)) {
+    		if (debug) Log.d(TAG,"The alarm is going to set Because no network was there:-> ");
+    		Alarm al = new Alarm();
+    		al.setAlarm(this);
+    		helloWorld.setText("Could not connect to network! Next try after 20 min");
+    		return;
+    	}
     	final Button syncButton = (Button) findViewById(R.id.sync_test);
 		syncButton.setEnabled(false);
-    	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    	
     	helloWorld.setText("Fetching data from OI Note");
     	AsyncDetectChange adc = new AsyncDetectChange(this);
 		adc.execute();

@@ -17,6 +17,7 @@ import org.openintents.cloudsync.util.SyncUtil;
 import org.openintents.cloudsync.util.Ulg;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,8 +46,8 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	private static StringBuilder jsonBuilder = new StringBuilder();
 	private static StringBuilder jsonDeleteBuilder = new StringBuilder();
 
-	public AsyncSync(CloudSyncActivity cloudSyncActivity) {
-		this.activity = cloudSyncActivity;
+	public AsyncSync(Context cloudSyncActivity) {
+		this.activity = (CloudSyncActivity) cloudSyncActivity;
 	}
 
 

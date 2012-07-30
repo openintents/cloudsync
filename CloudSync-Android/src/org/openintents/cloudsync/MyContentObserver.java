@@ -19,8 +19,7 @@ public class MyContentObserver extends ContentObserver {
 
     @Override
     public void onChange(boolean selfChange) {
-        Log.d("vincent", "MyContentObserver.onChange( " + selfChange
-                + ")");
+        
         Log.d("vincent", "Something is fishy");
         
         updateTimeTask.setActivity(getActivity());
