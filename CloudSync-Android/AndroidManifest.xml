@@ -79,6 +79,12 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
+        
+        <service android:name="org.openintents.cloudsync.service.StartUpService" >
+            <intent-filter>
+                <action android:name="org.openintents.cloudsync.service.StartUpService" />
+            </intent-filter>
+        </service>
 
     <!--    
         <provider
