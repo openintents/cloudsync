@@ -496,9 +496,6 @@ public class CloudSyncActivity extends Activity {
             	helloWorld.setText("Done! Number of entries deleted is: "+val);
             }
         }.execute();
-    	
-    	
-    	
 	}
 
 	

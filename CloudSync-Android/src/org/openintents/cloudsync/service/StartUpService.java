@@ -44,8 +44,10 @@ public class StartUpService extends Service {
 		Toast.makeText(this, "Service Started Vincent", Toast.LENGTH_LONG).show();
 		if (debug) Log.d(TAG,"The startup service onStart():-> ");
 		
-		AsyncDetectChange adc = new AsyncDetectChange(this);
-		adc.execute();
+		DetectChange dc = new DetectChange(this);
+		dc.detectExecute();
+//		AsyncDetectChange adc = new AsyncDetectChange(this);
+//		adc.execute();
 
 	}
 }

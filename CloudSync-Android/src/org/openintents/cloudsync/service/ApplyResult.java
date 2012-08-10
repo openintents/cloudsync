@@ -3,12 +3,10 @@ package org.openintents.cloudsync.service;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openintents.cloudsync.CloudSyncActivity;
 import org.openintents.cloudsync.Util;
 import org.openintents.cloudsync.notepad.NotePad;
-import org.openintents.cloudsync.notepad.NotePad.Notes;
 import org.openintents.cloudsync.notepad.Ulg;
-import org.openintents.cloudsync.util.Dumper;
+import org.openintents.cloudsync.notepad.NotePad.Notes;
 import org.openintents.cloudsync.util.NotepadSync;
 
 import android.content.ContentValues;
@@ -16,10 +14,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
-public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
+public class ApplyResult {
+	
 	static String tag = "vincent";
 	static String TAG = "AsyncApplyResult";
 	private static final boolean debug = true;
@@ -41,13 +39,12 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 	static final int MOD_MODIFIED = 2;
 	static final int MOD_LOCALID = 1;
 	static final int NOTE_MODIFIED = 1;
-	
-	public AsyncApplyResult(Context context) {
+
+	public ApplyResult(Context context) {
 		this.context = context;
 	}
-	
-	@Override
-	protected String doInBackground(String[]... params) {
+
+	public void applyExecute(String[]... params) {
 		
 		if (debug) Log.v(TAG, "do in back of apply result");
 		String[] paramres = params[0];
@@ -116,10 +113,11 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 		deleteNotes(deleteData);
 		if (debug) Log.d(TAG,"deleted notes:-> "+"");
 		refreshModTable();
-		return null;
+		applyPostExecute(null);
+		
 	}
-
-	private void refreshModTable() {
+	
+private void refreshModTable() {
 		
 		//
 		
@@ -286,13 +284,13 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 		
 	}
 
-	@Override
-	protected void onPostExecute(String result) {
-	
+
+	protected void applyPostExecute(String result) {
+		
 		SharedPreferences prefs = Util.getSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean(Util.IN_SYNC, false);
-		super.onPostExecute(result);
+		
 	}
 	
 	private long[][] getmodMatrix() {
@@ -324,8 +322,6 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 		}
 		return modMatrix;
 	}
-	
-	
 	
 
 }
