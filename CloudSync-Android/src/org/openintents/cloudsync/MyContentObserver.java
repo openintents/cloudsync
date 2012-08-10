@@ -57,7 +57,7 @@ class UpdateTimeTask extends TimerTask {
 		   boolean inSync = prefs.getBoolean(Util.IN_SYNC, false);
 		   long nowTime = System.currentTimeMillis();
 		   long lastTime = prefs.getLong(Util.LAST_TIME, 0);
-		   if( (nowTime-lastTime) > 120000 | !inSync ) {
+		   if( (nowTime-lastTime) > Util.SYNC_DIFF_TIME ) {
 			   editor.putLong(Util.LAST_TIME, nowTime);
 			   editor.putBoolean(Util.IN_SYNC, true);
 			   Log.d("vincent", "Do the sync baccha!!");

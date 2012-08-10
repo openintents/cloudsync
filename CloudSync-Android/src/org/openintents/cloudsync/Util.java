@@ -115,6 +115,8 @@ public class Util {
 
 	public static final String IN_SYNC = "inSync";
 
+	public static final long SYNC_DIFF_TIME = 120*1000;
+
     /**
      * Display a notification containing the given string.
      */
@@ -250,9 +252,9 @@ public class Util {
         return Util.class.getPackage().getName();
     }
     
-    public static boolean isNetworkAvailable(Activity activity) {
+    public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager 
-              = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+              = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }

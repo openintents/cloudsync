@@ -161,8 +161,6 @@ public class CloudSyncActivity extends Activity {
         final Button sayHelloButton = (Button) findViewById(R.id.say_hello);
         final Button deleteAll = (Button) findViewById(R.id.delete_all);
         
-        
-        
         /**
         Uri customUri = Uri.parse(IdMapContentProvider.CONTENT_URI.toString());
         if (debug) Log.d(TAG, "customeUri:-> "+customUri.toString());
@@ -405,7 +403,7 @@ public class CloudSyncActivity extends Activity {
     		if (debug) Log.d(TAG,"The alarm is going to set Because no network was there:-> ");
     		Alarm al = new Alarm();
     		al.setAlarm(this);
-    		helloWorld.setText("Could not connect to network! Next try after 20 min");
+    		helloWorld.setText("Could not connect to network! \n Next try after 20 min");
     		return;
     	}
     	final Button syncButton = (Button) findViewById(R.id.sync_test);
