@@ -64,6 +64,8 @@ public class CloudSyncActivity extends Activity {
      */
     private static final String TAG = "CloudSyncActivity";
     private static final boolean debug = true;
+    public static final String NOTE_AUTHORITY = "org.openintents.notepad";
+	public static final Uri NOTE_CONTENT_URI = Uri.parse("content://"+ NOTE_AUTHORITY + "/notes");
     private static Integer val;
 
     /**
@@ -427,9 +429,23 @@ public class CloudSyncActivity extends Activity {
     
     public void startStandAloneSync() {
     	
-    	// TODO: First check if the network is available if yes then kewl
-    	// else just
+        // First check if the network is available if yes then kewl
+    	// else just start an alarm  for the same.
+    	
+    	// If OI Note does not exist then just print it is not there.
+    	
     	final TextView helloWorld = (TextView) findViewById(R.id.hello_world);
+    	
+    	try {
+    		
+    		Cursor cursor = getContentResolver().query(NOTE_CONTENT_URI, null, null, null, null);
+    		cursor.moveToFirst();
+    	} catch (NullPointerException e) {
+    		
+			if (debug) Log.d(TAG,"The OI Note is not installed:-> ");
+    		helloWorld.setText("The OI Note is not yet Installed");
+    		return;
+		}
     	
     	AlarmManager am=(AlarmManager) getSystemService(Context.ALARM_SERVICE);
    	    Intent i = new Intent(this, Alarm.class);
@@ -439,15 +455,26 @@ public class CloudSyncActivity extends Activity {
     		if (debug) Log.d(TAG,"The alarm is going to set Because no network was there:-> ");
     		Alarm al = new Alarm();
     		al.setAlarm(this);
-    		helloWorld.setText("Could not connect to network! \n Next try after 20 min");
+    		helloWorld.setText("Could not connect to network! Next try after 20 min");
     		return;
     	}
     	final Button syncButton = (Button) findViewById(R.id.sync_test);
 		syncButton.setEnabled(false);
     	
-    	helloWorld.setText("Fetching data from OI Note");
-    	AsyncDetectChange adc = new AsyncDetectChange(this);
-		adc.execute();
+		SharedPreferences prefs = Util.getSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
+		boolean inSync = prefs.getBoolean(Util.IN_SYNC, false);
+		long nowTime = System.currentTimeMillis();
+		long lastTime = prefs.getLong(Util.LAST_TIME, 0);
+		if ((nowTime - lastTime) > 120000) {
+			editor.putLong(Util.LAST_TIME, nowTime);
+			editor.putBoolean(Util.IN_SYNC, true);
+			Log.d("vincent", "Do the sync baccha!!");
+			editor.commit();
+			helloWorld.setText("Fetching data from OI Note");
+	    	AsyncDetectChange adc = new AsyncDetectChange(this);
+			adc.execute();
+		}
     }
     
     private void startSync() {
