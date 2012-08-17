@@ -55,6 +55,7 @@
         android:id="@+id/time_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
         android:layout_above="@id/button_layout"
         >
         </ListView>
