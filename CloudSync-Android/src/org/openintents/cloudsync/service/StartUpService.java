@@ -5,6 +5,8 @@ import org.openintents.cloudsync.Util;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +15,8 @@ public class StartUpService extends Service {
 
 	private static final boolean debug = true;
 	private static final String TAG = "StartUpService";
+	public static final String NOTE_AUTHORITY = "org.openintents.notepad";
+	public static final Uri NOTE_CONTENT_URI = Uri.parse("content://"+ NOTE_AUTHORITY + "/notes");
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -47,6 +51,19 @@ public class StartUpService extends Service {
 		Toast.makeText(this, "Service Started Vincent", Toast.LENGTH_LONG).show();
 		if (debug) Log.d(TAG,"The startup service onStart():-> ");
 		
+		try {
+
+			Cursor cursor = getContentResolver().query(NOTE_CONTENT_URI, null,
+					null, null, null);
+			cursor.moveToFirst();
+		} catch (NullPointerException e) {
+
+			if (debug)
+				Log.d(TAG, "The OI Note is not installed:-> ");
+			//helloWorld.setText("The OI Note is not yet Installed");
+			return;
+		}
+
 		if(Util.isNetworkAvailable(this)) {
 						SharedPreferences prefs = Util.getSharedPreferences(this);
 						SharedPreferences.Editor editor = prefs.edit();
