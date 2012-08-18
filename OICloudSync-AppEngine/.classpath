@@ -14,5 +14,10 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-bundle-1.12.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-2.0.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-3.3.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-core-1.12.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gson-2.2.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

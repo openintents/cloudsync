@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	        <meta charset='utf-8'>
+		<title>OI Cloud Sync</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+		<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css"/>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
+	</head>
+
+	<body>
+		<div id="navbar" class="navbar navbar-fixed-top">
+		    <div class="navbar-inner">
+		        <div class="container-fluid">
+			    <a class="brand" href="#">OI Cloud Sync</a>
+			    <span class="pull-right">
+			    	<a href="interface/" class="btn btn-success">Login</a>
+			    </span>
+		        </div>
+		    </div>
+	        </div>
+
+		<div class="container-fluid">
+			<header id="intro" class="hero-unit">
+				<div class="inner">
+					<h1>OpenIntents Cloud Sync</h1>
+					<h3>OpenIntents on the cloud!</h3>
+				</div> <!-- .inner -->
+				<div id="slides-wrap" class="row hidden-phone">
+				<div id="slides">
+					<div class="slides_container">
+						<div>
+							<img src="img/cloudsync.png"/>
+							<div class="caption">
+								Sync your Android device to the cloud
+							</div>
+						</div>
+						<div>
+							<img src="img/slide-2.png"/>
+							<div class="caption">
+								Customize the online interface with various themes!
+							</div>
+						</div>
+						<div>
+							<img src="img/mobile-interface.png"/>
+							<div class="caption">
+								Optimized for mobile browsers
+							</div>
+						</div>
+					</div> <!-- .slides_container -->
+				</div> <!-- #slides -->
+				</div> <!-- #slides-wrap -->
+				<a href="interface/" class="btn btn-large btn-success" style="margin-top:1em">Login with your Google account!</a>
+			</header> <!-- #intro -->
+			
+			<div id="content" class="row">
+				<div class="span4">
+					<h3>Sync your data to the cloud</h3>
+					<p>With OI Cloud Sync you can sync your data to the cloud right from your device!</p>
+				</div>
+				<div class="span4">
+					<h3>Access your data online</h3>
+					<p>You can access your OpenIntents data online through the web interface and make changes to it anytime, and your changes will be synced to all your devices!</p>
+				</div>
+				<div class="span4">
+					<h3>Store your OI Notepad notes</h3>
+					<p>Store your OI Notepad notes on the cloud and sync it on all of your devices</p>
+				</div>
+			</div>
+		</div>	<!-- .container -->
+		
+		<footer id="footer">
+			<p>&copy; 2012 OpenIntents</p>
+	        </footer>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+		<script src="js/slides.min.jquery.js" type="text/javascript"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript"> </script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#slides').slides({
+					play: 6000,
+					paginationClass: 'paginate',
+					animationStart: function(current) {
+						$('.caption').animate({
+							bottom: -40,
+						},100);
+					},
+					animationComplete: function(current) {
+						$('.caption').animate({
+							bottom: 40,
+						},200);
+					},
+					slidesLoad: function(current) {
+						$('.caption').animate({
+							bottom: 40,
+						},200);
+					},
+				});
+			});
+			
+
+		</script>
+	</body>
+</html>

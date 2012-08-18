@@ -1,0 +1,126 @@
+body {
+	background-color: #f8f8f8;
+}
+
+.navbar .navbar-inner {
+	border-radius: 0px;
+}
+
+#intro {
+	margin-top: 3em;
+	text-align: center;
+}
+
+#intro h1 {
+	font-size: 3em;
+	font-weight: bold;
+}
+
+#intro h3 {
+	font-weight: normal;
+	color: #4e4e4e;
+	font-style: italic;
+}
+
+#slides-wrap {
+	position: relative;
+	width: 600px;
+	margin: 2em auto;
+}
+
+#slides-wrap a {
+	text-align: center;
+}
+
+.slides_container img {
+	width: 700px;
+	height: 366px;
+}
+
+.slides_container {
+        width: 700px;
+        height: 360px;
+        -webkit-box-shadow:  0px 0px 4px 4px rgba(0, 0, 0, 0.4);
+        box-shadow:  0px 0px 4px 4px rgba(0, 0, 0, 0.4);
+	-webkit-border-radius: 4px;
+        border-radius: 4px;
+}
+
+.slides-container div {
+        display:block;
+}
+
+.caption {
+	z-index: 400;
+	position: relative;
+	bottom: 40px;
+	padding: 0.6em;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.paginate {
+	position: relative;
+	margin: 10px 0 0;
+}
+
+.paginate li {
+	display: inline;
+}
+
+.paginate li a {
+	background: url('img/pagination.png');
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	padding-top: 10px;
+	width: 12px;
+	height: 0;
+	display: block;
+	float: left;
+	outline: none;
+}
+
+.paginate li.current a {
+	background-position: 0 -15px;
+}
+
+#ticker {
+	list-style: none;
+	margin: 3em 0;
+}
+
+#ticker li {
+	font-style: italic;
+	font-size: 18px;
+	/*font-weight: bold;*/
+}
+
+#content {
+	margin-top: 4em;
+}
+
+/*#content div {
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	padding: 4px;
+}*/
+
+#footer {
+	margin-top: 1em;
+	padding: 6px;
+	color: #fff;
+	background-color: #2C2C2C;
+}
+
+#footer p {
+	margin: 0;
+	padding: 0;
+}
+
+@media (max-width: 767px) {
+	#footer {
+		margin-left: -20px;
+		margin-right: -20px;
+	}
+}
