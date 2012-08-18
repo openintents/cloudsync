@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000">
+    
+    
+    <TextView
+        android:id="@+id/hello_world"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:gravity="center"
+        android:padding="10dip"
+        android:text="@string/hello_world_text"
+        android:textColor="#ffffff"
+        android:textSize="16dip" />
+        
+    <LinearLayout
+    android:id="@+id/button_layout"    
+    android:layout_above="@id/hello_world"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="horizontal" 
+    >
+    
+    <Button
+        android:id="@+id/say_hello"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:gravity="center_horizontal"
+        android:text="@string/say_hello"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1" />
+    
+    <Button
+        android:id="@+id/sync_test"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:gravity="center_horizontal"
+        android:text="@string/sync_test_text"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1" />
+    
+    </LinearLayout>
+
+    <ListView 
+        android:id="@+id/time_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/button_layout"
+        >
+        </ListView>
+        
+    <Button
+        android:id="@+id/delete_all"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip"
+        android:layout_below="@id/sync_test"
+        android:gravity="center_horizontal"
+        android:text="delete"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1" 
+        android:visibility="invisible"
+        />
+
+    <Button
+        android:id="@+id/purge_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/delete_all"
+        android:onClick="purgeOnServer"
+        android:text="@string/purge_all" 
+        android:visibility="invisible"
+        />
+
+    
+
+</RelativeLayout>
