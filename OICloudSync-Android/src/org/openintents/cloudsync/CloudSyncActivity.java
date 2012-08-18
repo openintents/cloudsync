@@ -475,7 +475,7 @@ public class CloudSyncActivity extends Activity {
 	    	AsyncDetectChange adc = new AsyncDetectChange(this);
 			adc.execute();
 		} else {
-			if (debug) Log.d(TAG,"The sync happened within two minutes:-> ");
+			if (debug) Log.d(TAG,"The sync happened within two minutes inSync?:-> "+inSync+" Diff:-> "+(nowTime - lastTime)/1000);
 			helloWorld.setText("The device is already inside a Sync!");
 			syncButton.setEnabled(true);
 			

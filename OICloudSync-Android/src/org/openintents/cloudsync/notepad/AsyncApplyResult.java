@@ -291,6 +291,7 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 		SharedPreferences prefs = Util.getSharedPreferences(activity);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean(Util.IN_SYNC, false);
+		editor.commit();
 		super.onPostExecute(result);
 	}
 	

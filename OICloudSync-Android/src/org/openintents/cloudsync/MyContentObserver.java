@@ -47,7 +47,9 @@ public class MyContentObserver extends ContentObserver {
 
 
 class UpdateTimeTask extends TimerTask {
-	   private CloudSyncActivity activity;
+	private static final boolean debug = true;
+	private static final String TAG = "UpdateTimeTask";
+	private CloudSyncActivity activity;
 	private Handler handle;
 
 	public void run() {
@@ -57,15 +59,16 @@ class UpdateTimeTask extends TimerTask {
 		   boolean inSync = prefs.getBoolean(Util.IN_SYNC, false);
 		   long nowTime = System.currentTimeMillis();
 		   long lastTime = prefs.getLong(Util.LAST_TIME, 0);
-		   if( (nowTime-lastTime) > Util.SYNC_DIFF_TIME ) {
-			   editor.putLong(Util.LAST_TIME, nowTime);
-			   editor.putBoolean(Util.IN_SYNC, true);
+		   if( (nowTime-lastTime) > Util.SYNC_DIFF_TIME | !inSync) {
+			   //editor.putLong(Util.LAST_TIME, nowTime);
+			   //editor.putBoolean(Util.IN_SYNC, true);
 			   Log.d("vincent", "Do the sync baccha!!");
-			   editor.commit();
+			   //editor.commit();
 			   activity.startStandAloneSync();
 		   } else {
 			   // I hope when a sync is rejected because already a sync is taking place then
 			   // using the handle that was passed passing this object itself and delay with 120 secs.
+			   if (debug) Log.d(TAG,"the sync is called by ContentObserver but time diff is not enough its:-> "+(nowTime-lastTime)/1000);
 			   handle.removeCallbacks(this);
 			   handle.postDelayed(this, 120000);
 		   }

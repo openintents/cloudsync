@@ -290,6 +290,7 @@ private void refreshModTable() {
 		SharedPreferences prefs = Util.getSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean(Util.IN_SYNC, false);
+		editor.commit();
 		
 	}
 	
