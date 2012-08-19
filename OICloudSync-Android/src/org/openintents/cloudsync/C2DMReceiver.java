@@ -17,10 +17,13 @@ package org.openintents.cloudsync;
 import com.google.android.c2dm.C2DMBaseReceiver;
 
 import java.io.IOException;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.util.Log;
 
 /**
  * Receive a push message from the Cloud to Device Messaging (C2DM) service.
@@ -29,6 +32,11 @@ import android.content.SharedPreferences;
  * to the superclass constructor.
  */
 public class C2DMReceiver extends C2DMBaseReceiver {
+	
+    private static final boolean debug = true;
+	private static final String TAG = "C2DMReceiver";
+	CDMTimer cdmTimeTask = new CDMTimer();
+    Handler timeHandle = new Handler();
 
     public C2DMReceiver() {
         super(Setup.SENDER_ID);
@@ -79,5 +87,58 @@ public class C2DMReceiver extends C2DMBaseReceiver {
          * Replace this with your application-specific code
          */
         MessageDisplay.displayMessage(context, intent);
+        if (debug) Log.d(TAG,"recieved c2dm message:-> ");
+        
+        cdmTimeTask.setContext(this);
+        cdmTimeTask.setHandle(timeHandle);
+        timeHandle.removeCallbacks(cdmTimeTask);
+        timeHandle.postDelayed(cdmTimeTask, 30000);
+        
     }
 }
+
+class CDMTimer extends TimerTask {
+	private static final boolean debug = true;
+	private static final String TAG = "UpdateTimeTask";
+	private Context context;
+	private Handler handle;
+
+	public void run() {
+		
+		   if (debug) Log.d(TAG,"The sync is going to run from C2DM reciever:-> ");
+		   SharedPreferences prefs = Util.getSharedPreferences(context);
+		   boolean inSync = prefs.getBoolean(Util.IN_SYNC, false);
+		   long nowTime = System.currentTimeMillis();
+		   long lastTime = prefs.getLong(Util.LAST_TIME, 0);
+		   if( (nowTime-lastTime) > Util.SYNC_DIFF_TIME | !inSync) {
+			  
+			   if (debug) Log.d(TAG,"Conditions are right for the sync!!:-> ");
+			    Intent serviceIntent = new Intent();
+				serviceIntent.setAction("org.openintents.cloudsync.service.StartUpService");
+				context.startService(serviceIntent);
+				
+		   } else {
+			   // I hope when a sync is rejected because already a sync is taking place then
+			   // using the handle that was passed passing this object itself and delay with 120 secs.
+			   if (debug) Log.d(TAG,"the sync is called by C2dm reciever but time diff is not enough its:-> "+(nowTime-lastTime)/1000);
+			   handle.removeCallbacks(this);
+			   handle.postDelayed(this, 120000);
+		   }
+		   
+		   Log.d("vincent", "Time diff was: "+(nowTime-lastTime)/1000);
+		   
+	       
+	   }
+
+	public void setHandle(Handler timeHandle) {
+		
+		this.handle = timeHandle;
+		
+	}
+	
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	}
+    

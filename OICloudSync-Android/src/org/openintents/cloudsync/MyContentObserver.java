@@ -22,6 +22,15 @@ public class MyContentObserver extends ContentObserver {
         
         Log.d("vincent", "Something is fishy");
         
+        SharedPreferences prefs = Util.getSharedPreferences(activity);
+		boolean inSync = prefs.getBoolean(Util.IN_SYNC, false);
+		long nowTime = System.currentTimeMillis();
+		long lastTime = prefs.getLong(Util.LAST_TIME, 0);
+		if( (nowTime-lastTime) < 30*1000 & inSync) {
+			//This condition is added so that when contentProvider changes
+			// because of the sync itself, it does not start another sync.
+			return;
+		}
         updateTimeTask.setActivity(getActivity());
         updateTimeTask.setHandle(timeHandle);
         timeHandle.removeCallbacks(updateTimeTask);
