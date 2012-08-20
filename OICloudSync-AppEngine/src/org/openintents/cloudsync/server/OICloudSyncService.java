@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openintents.cloudsync.annotation.ServiceMethod;
 
+import com.google.appengine.labs.repackaged.com.googlecode.charts4j.Data;
 import com.ibm.icu.util.Calendar;
 
 
@@ -76,6 +77,12 @@ public class OICloudSyncService {
 	@ServiceMethod
 	public Integer deleteAll(String packageName) {
 		return db.purgeAll(packageName);
+	}
+	
+	@ServiceMethod
+	public Boolean sendC2DM(String message) {
+		DataStore.sendC2DMUpdate(message);
+		return true;
 	}
 	
 	

@@ -31,5 +31,7 @@ public interface OICloudSyncRequest extends RequestContext {
 
 	Request<Integer> deleteAll(String packageName);
 
+	Request<Boolean> sendC2DM(String message);
+
 
 }

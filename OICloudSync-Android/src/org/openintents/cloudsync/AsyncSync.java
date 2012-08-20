@@ -120,8 +120,35 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		// Make Json Arrays for Return. [0] = {update and insert} , [1] = Delete
 		//------------------------------------------------------------------------------------
 		updateTimeTable(); // So that previous Sync becomes this syncs time.
+		
+		//------------------------------------------------------------------------------------
+		// Send a C2DM Message to all the devices
+		//------------------------------------------------------------------------------------
+		if(!(rdArray.length == 0 & deleteList.size()==0)) {
+			// This means that something has come from Android for the sync.
+			// And hence something for update and insert
+			sendC2DM("Update or Insert happened");
+		}
+		
 		return makeJsonArraysForClient();
 		
+	}
+
+
+	private void sendC2DM(String message) {
+		
+		OICloudSyncRequestFactory factory = Util.getRequestFactory(activity, OICloudSyncRequestFactory.class);
+		factory.taskRequest().sendC2DM(message).fire(new Receiver<Boolean>() {
+
+			@Override
+			public void onSuccess(Boolean arg0) {
+				if(!arg0.booleanValue()) {
+					if (debug) Log.e(TAG,"The C2DM message was not sent:-> ");
+				}
+			}
+			
+		});
+	
 	}
 
 
@@ -586,6 +613,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		}
 		if (debug) Log.d(TAG, "length of the idmapmatrix is "+idMapMatrix.length);
 		idMapCursor.close();
+		
 		return idMapMatrix;
 		
 	}
