@@ -115,6 +115,8 @@ public class Util {
 
 	public static final long SYNC_DIFF_TIME = 120*1000;
 
+	public static final String C2DMID = "c2dmid";
+
     /**
      * Display a notification containing the given string.
      */

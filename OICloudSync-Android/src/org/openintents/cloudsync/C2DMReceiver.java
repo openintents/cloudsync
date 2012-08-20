@@ -15,13 +15,20 @@
 package org.openintents.cloudsync;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 import java.io.IOException;
 import java.util.TimerTask;
 
+import org.openintents.cloudsync.client.MyRequestFactory;
+import org.openintents.cloudsync.client.MyRequestFactory.HelloWorldRequest;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
@@ -37,8 +44,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	private static final String TAG = "C2DMReceiver";
 	CDMTimer cdmTimeTask = new CDMTimer();
     Handler timeHandle = new Handler();
+    C2DMReceiver receiver;
 
-    public C2DMReceiver() {
+    public void setReceiver(C2DMReceiver receiver) {
+		this.receiver = receiver;
+	}
+
+	public C2DMReceiver() {
         super(Setup.SENDER_ID);
     }
 
@@ -86,8 +98,44 @@ public class C2DMReceiver extends C2DMBaseReceiver {
         /*
          * Replace this with your application-specific code
          */
-        MessageDisplay.displayMessage(context, intent);
-        if (debug) Log.d(TAG,"recieved c2dm message:-> ");
+    	SharedPreferences prefs = Util.getSharedPreferences(this);
+    	String storedMessageId = prefs.getString(Util.C2DMID, "nothing");
+    	String storedDeviceId = prefs.getString(Util.DEVICE_REGISTRATION_ID, "no device id");
+    	Bundle extras = intent.getExtras();
+    	String gotMessage = "";
+        if (extras != null) {
+            gotMessage = (String) extras.get("message");
+        }
+        
+        if (debug) Log.d(TAG,"storedMsg: "+storedMessageId+" GotMessage:-> "+gotMessage);
+        if(storedDeviceId.equals(gotMessage)){
+        	MessageDisplay.displayMessage(context, intent);
+        	if (debug) Log.d(TAG,"Same sender and reciever:-> "+gotMessage);
+        } else {
+        	MessageDisplay.displayMessage(context, intent);
+        	if (debug) Log.d(TAG,"C2DM message came from diff device:-> ");
+        	
+        	// Going to start the sync service in the async task.
+            setReceiver(this);
+        	new AsyncTask<Void, Void, String>() {
+                private String message;
+
+                @Override
+                protected String doInBackground(Void... arg0) {
+                	Intent serviceIntent = new Intent();
+    				serviceIntent.setAction("org.openintents.cloudsync.service.StartUpService");
+    				receiver.startService(serviceIntent);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(String result) {
+                    
+                }
+            }.execute();
+        }
+        
+        
         
 //        cdmTimeTask.setContext(this);
 //        cdmTimeTask.setHandle(timeHandle);

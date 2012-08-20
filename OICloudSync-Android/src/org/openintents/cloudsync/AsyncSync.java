@@ -11,7 +11,6 @@ import org.openintents.cloudsync.notepad.AsyncApplyResult;
 import org.openintents.cloudsync.shared.OICloudSyncRequest;
 import org.openintents.cloudsync.shared.OICloudSyncRequestFactory;
 import org.openintents.cloudsync.shared.TaskProxy;
-import org.openintents.cloudsync.util.Dumper;
 import org.openintents.cloudsync.util.NotepadSync;
 import org.openintents.cloudsync.util.RecievedData;
 import org.openintents.cloudsync.util.SyncUtil;
@@ -19,6 +18,7 @@ import org.openintents.cloudsync.util.Ulg;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -127,7 +127,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 		if(!(rdArray.length == 0 & deleteList.size()==0)) {
 			// This means that something has come from Android for the sync.
 			// And hence something for update and insert
-			sendC2DM("Update or Insert happened");
+			sendC2DM("Put a random Double and save in sharedResource");
 		}
 		
 		return makeJsonArraysForClient();
@@ -137,6 +137,13 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 
 	private void sendC2DM(String message) {
 		
+		message = Double.toString(Math.random());
+		SharedPreferences prefs = Util.getSharedPreferences(activity);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Util.C2DMID, message);
+		editor.commit();
+		
+		message = prefs.getString(Util.DEVICE_REGISTRATION_ID, "no device id");
 		OICloudSyncRequestFactory factory = Util.getRequestFactory(activity, OICloudSyncRequestFactory.class);
 		factory.taskRequest().sendC2DM(message).fire(new Receiver<Boolean>() {
 
