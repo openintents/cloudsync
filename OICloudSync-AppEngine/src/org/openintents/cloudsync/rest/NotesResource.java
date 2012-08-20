@@ -83,10 +83,11 @@ public class NotesResource {
 		}
 		
 		long id = Long.parseLong(_id);
-		
+		long appEngineTime = service.getAppEngineTime();
 		Task task = service.readTask(id);
 		String t = Util.appendJSON(task.getJsonStringData(), "title", title);
 		t = Util.appendJSON(t, "note", note);
+		task.setTimestamp(appEngineTime);
 		task.setJsonStringData(t);
 		service.updateTask(task);
 		
@@ -131,10 +132,12 @@ public class NotesResource {
 		Note n = new Note();
 		n.title = title;
 		n.note = note;
-		n.created_date = n.modified_date = service.getAppEngineTime();
+		long appEngineTime = service.getAppEngineTime();
+		n.created_date = n.modified_date = appEngineTime;
 		
 		task.setAppPackageName(Util.NOTEPAD_PACKAGE_NAME);
 		task.setJsonStringData(Util.toJSON(n));
+		task.setTimestamp(appEngineTime);
 		service.updateTask(task);
 		return "";
 	}

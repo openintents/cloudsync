@@ -30,7 +30,7 @@ public class OICloudSyncService {
 		//this is where you can put c2dm message
 		task.setEmailAddress(DataStore.getUserEmail());
 		task = db.update(task);
-		//DataStore.sendC2DMUpdate("INSERT" + ":");
+		//DataStore.sendC2DMUpdate("UPDATE" + ":");
 		//In the above line the TaskChange.UPDATE only means "update" string and separator is :
 		return task;
 	}

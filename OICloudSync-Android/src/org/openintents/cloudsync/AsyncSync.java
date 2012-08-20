@@ -11,6 +11,7 @@ import org.openintents.cloudsync.notepad.AsyncApplyResult;
 import org.openintents.cloudsync.shared.OICloudSyncRequest;
 import org.openintents.cloudsync.shared.OICloudSyncRequestFactory;
 import org.openintents.cloudsync.shared.TaskProxy;
+import org.openintents.cloudsync.util.Dumper;
 import org.openintents.cloudsync.util.NotepadSync;
 import org.openintents.cloudsync.util.RecievedData;
 import org.openintents.cloudsync.util.SyncUtil;
@@ -28,7 +29,7 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 	
-	private static final String TAG = "CloudSyncActivity";
+	private static final String TAG = "AsyncSync";
 	private static final boolean debug = true;
 	
 	protected static RecievedData[] rdArray=null;
@@ -411,6 +412,7 @@ public class AsyncSync extends AsyncTask<String[], Void, String[] >{
 				if (debug) Log.d(TAG, "Size of list"+list.size());
 			} 
 		});
+		Ulg.d("TaskProxy List:-> "+list.toString());
 		return list;
 	}
 

@@ -89,10 +89,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
         MessageDisplay.displayMessage(context, intent);
         if (debug) Log.d(TAG,"recieved c2dm message:-> ");
         
-        cdmTimeTask.setContext(this);
-        cdmTimeTask.setHandle(timeHandle);
-        timeHandle.removeCallbacks(cdmTimeTask);
-        timeHandle.postDelayed(cdmTimeTask, 30000);
+//        cdmTimeTask.setContext(this);
+//        cdmTimeTask.setHandle(timeHandle);
+//        timeHandle.removeCallbacks(cdmTimeTask);
+//        timeHandle.postDelayed(cdmTimeTask, 30000);
         
     }
 }
