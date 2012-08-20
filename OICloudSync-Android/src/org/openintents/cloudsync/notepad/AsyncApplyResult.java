@@ -241,15 +241,23 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 			values.put(Notes.CREATED_DATE, noteobj.getLong("created_date") );
 			values.put(Notes.MODIFIED_DATE, noteobj.getLong("modified_date"));
 			
-			if(!(noteobj.getString("tags").trim().equals("null"))) {
-				values.put(Notes.TAGS, noteobj.getString("tags"));
+			if (noteobj.has("tags")) {
+				if(!(noteobj.getString("tags").trim().equals("null"))|(noteobj.getString("tags").trim().equals(""))) {
+					values.put(Notes.TAGS, noteobj.getString("tags"));
+				}
 			}
 			
-			if(!(noteobj.getString("encrypted").trim().equals("null"))) {
-				values.put(Notes.ENCRYPTED, noteobj.getLong("encrypted"));
+			
+			boolean encryptval = (noteobj.getBoolean("encrypted")==false);
+			Ulg.d(TAG,encryptval+"");
+			if(!((noteobj.getString("encrypted").trim().equals("null"))|(noteobj.getBoolean("encrypted")!=false)|(noteobj.getString("encrypted").trim().equals("")))|(noteobj.getString("encrypted").trim().equals("false"))) {
+				if (!(noteobj.getBoolean("encrypted")==false)) {
+					values.put(Notes.ENCRYPTED, noteobj.getLong("encrypted"));
+				}
+				
 			}
 			
-			if(!(noteobj.getString("theme").trim().equals("null"))) {
+			if(!(noteobj.getString("theme").trim().equals("null"))|(noteobj.getString("theme").trim().equals(""))) {
 				values.put(Notes.THEME, noteobj.getString("theme"));
 			}
 			
@@ -275,8 +283,9 @@ public class AsyncApplyResult extends AsyncTask<String[], Void, String>{
 			
 			activity.getContentResolver().insert(IDMAP_CONTENT_URI, idmapValues);
 			
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			
+			if (debug) Log.e(TAG,"Json Format error in AsyncApplyResult:-> ",e);
 			e.printStackTrace();
 		}
 		
